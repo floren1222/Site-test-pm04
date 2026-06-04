@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Тестирование: ПМ 04</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --card-bg: #ffffff;
+            --text-main: #1d1d1f;
+            --text-secondary: #86868b;
+            --accent: #0071e3;
+            --accent-hover: #0077ed;
+            --correct: #34c759;
+            --wrong: #ff3b30;
+            --hint-color: #ff9500;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            --border-radius: 24px;
+            --select-bg: #f5f5f7;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #000000;
+                --card-bg: #1c1c1e;
+                --text-main: #f5f5f7;
+                --text-secondary: #a1a1a6;
+                --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                --select-bg: #2c2c2e;
+            }
+            body { background-color: var(--bg-color); }
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%; max-width: 480px;
+            position: relative;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 32px 24px;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        .card.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1 { margin: 0; font-weight: 700; text-align: center; font-size: 24px; letter-spacing: -0.5px; }
+        p.subtitle { color: var(--text-secondary); text-align: center; margin: 0; font-size: 15px; line-height: 1.5; }
+
+        /* Селектор диапазона */
+        .range-container { display: flex; flex-direction: column; gap: 10px; margin: 8px 0; }
+        .range-option {
+            display: flex; align-items: center; background: var(--select-bg);
+            padding: 16px; border-radius: 16px; cursor: pointer;
+            transition: all 0.2s ease; border: 2px solid transparent;
+        }
+        .range-option input[type="radio"] {
+            appearance: none; -webkit-appearance: none;
+            width: 20px; height: 20px; border: 2px solid var(--text-secondary);
+            border-radius: 50%; margin-right: 14px; outline: none;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease; background: transparent;
+        }
+        .range-option input[type="radio"]:checked {
+            border-color: var(--accent); background: var(--accent);
+        }
+        .range-option input[type="radio"]:checked::before {
+            content: ""; width: 8px; height: 8px; background: #ffffff; border-radius: 50%;
+        }
+        .range-option:has(input:checked) {
+            border-color: rgba(0, 113, 227, 0.3); background: rgba(0, 113, 227, 0.05);
+        }
+        .range-label { font-size: 16px; font-weight: 600; }
+
+        /* Прогресс и кнопки */
+        .progress-bar { height: 6px; background: rgba(134, 134, 139, 0.2); border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
+        .question-text { font-size: 20px; font-weight: 600; line-height: 1.4; margin-bottom: 4px; text-align: center; }
+        
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option-btn {
+            background: rgba(134, 134, 139, 0.1); border: 2px solid transparent; border-radius: 16px;
+            padding: 16px 20px; font-size: 16px; font-family: inherit; color: var(--text-main);
+            text-align: left; cursor: pointer; transition: all 0.2s ease;
+            position: relative; font-weight: 500; line-height: 1.3;
+        }
+        .option-btn:hover:not(:disabled) { background: rgba(134, 134, 139, 0.15); }
+        .option-btn:active:not(:disabled) { transform: scale(0.98); }
+        
+        .option-btn.correct { background: rgba(52, 199, 89, 0.15); border-color: var(--correct); color: var(--correct); }
+        .option-btn.wrong { background: rgba(255, 59, 48, 0.15); border-color: var(--wrong); color: var(--wrong); }
+        
+        /* Стили для подсказки */
+        .option-btn.hidden-by-hint {
+            opacity: 0.3; pointer-events: none; transform: scale(0.95);
+        }
+
+        .actions-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 5px; }
+        
+        .primary-btn {
+            background: var(--accent); color: white; border: none; border-radius: 16px;
+            padding: 16px; font-size: 17px; font-weight: 600; cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease; width: 100%; letter-spacing: -0.3px;
+        }
+        .primary-btn:hover { background: var(--accent-hover); }
+        .primary-btn:active { transform: scale(0.98); }
+
+        .hint-btn {
+            background: rgba(255, 149, 0, 0.15); color: var(--hint-color); border: none; border-radius: 16px;
+            padding: 12px 16px; font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; flex-shrink: 0;
+        }
+        .hint-btn:hover:not(:disabled) { background: rgba(255, 149, 0, 0.25); }
+        .hint-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .result-percent { font-size: 64px; font-weight: 800; color: var(--text-main); text-align: center; margin: 10px 0 0 0; letter-spacing: -2px;}
+        .result-score { font-size: 18px; font-weight: 600; color: var(--accent); text-align: center; margin: 0 0 10px 0; }
+        .stats { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ГЛАВНАЯ СТРАНИЦА -->
+    <div id="intro-screen" class="card active">
+        <h1>Тестирование ПМ 04</h1>
+        <p class="subtitle">118 уникальных вопросов. Выберите диапазон:</p>
+        
+        <div class="range-container">
+            <label class="range-option">
+                <input type="radio" name="quiz-range" value="1-50" checked>
+                <span class="range-label">Первые 50 вопросов (1–50)</span>
+            </label>
+            <label class="range-option">
+                <input type="radio" name="quiz-range" value="51-118">
+                <span class="range-label">Оставшиеся 68 (51–118)</span>
+            </label>
+            <label class="range-option">
+                <input type="radio" name="quiz-range" value="all">
+                <span class="range-label">Все 118 вопросов сразу</span>
+            </label>
+        </div>
+
+        <button class="primary-btn" onclick="startQuiz()">Начать тест</button>
+    </div>
+
+    <!-- ЭКРАН ТЕСТИРОВАНИЯ -->
+    <div id="quiz-screen" class="card">
+        <div class="stats">
+            <span id="question-counter">Вопрос 1</span>
+            <span id="score-counter">Счет: 0</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div class="question-text" id="question-text"></div>
+        <div class="options" id="options-container"></div>
+        
+        <div class="actions-row">
+            <button class="hint-btn" id="hint-btn" onclick="useHint()">💡 50/50</button>
+        </div>
+    </div>
+
+    <!-- ЭКРАН РЕЗУЛЬТАТОВ -->
+    <div id="result-screen" class="card">
+        <h1>Тест завершен</h1>
+        <p class="subtitle">Ваш итоговый результат:</p>
+        <div class="result-percent" id="final-percent">0%</div>
+        <div class="result-score" id="final-score">0 из 0 правильных</div>
+        <p class="subtitle" id="result-message"></p>
+        <button class="primary-btn" onclick="backToIntro()">На главную</button>
+    </div>
+</div>
+
+<script>
+    // 118 уникальных вопросов (без повторов)
+    const allQuestions = [{"question": "Как расшифровывается LAN?", "options": ["Local Area Network", "Long Area Network", "Light Access Network", "Linked Access Network"], "correct": "Local Area Network"}, {"question": "Что характеризует LAN-сеть?", "options": ["Ограничена одним зданием или помещением", "Используется только в военной сфере", "Работает по всему миру", "Используется только в спутниковой связи"], "correct": "Ограничена одним зданием или помещением"}, {"question": "Что означает WAN?", "options": ["Wide Area Network", "Wide Access Network", "Wireless Area Network", "Web Area Network"], "correct": "Wide Area Network"}, {"question": "Какой из типов сетей самый крупномасштабный?", "options": ["WAN", "MAN", "PAN", "LAN"], "correct": "WAN"}, {"question": "Что такое MAN-сеть?", "options": ["Сеть в пределах города", "Сеть внутри одного офиса", "Сеть между странами", "Сеть между двумя компьютерами"], "correct": "Сеть в пределах города"}, {"question": "Какая сеть соединяет устройства в пределах одной комнаты?", "options": ["PAN", "WAN", "MAN", "LAN"], "correct": "PAN"}, {"question": "Что означает PAN?", "options": ["Personal Area Network", "Private Access Network", "Public Area Network", "Personal Access Node"], "correct": "Personal Area Network"}, {"question": "Примером LAN-сети может быть:", "options": ["Сеть в пределах школы", "Глобальный интернет", "Связь между странами", "Связь между городами"], "correct": "Сеть в пределах школы"}, {"question": "Какая сеть соединяет несколько LAN-сетей в одном городе?", "options": ["MAN", "PAN", "WAN", "GAN"], "correct": "MAN"}, {"question": "Что означает GAN?", "options": ["Global Area Network", "General Access Network", "Government Area Network", "Graphical Access Network"], "correct": "Global Area Network"}, {"question": "Что характеризует WAN-сеть?", "options": ["Объединяет множество LAN и MAN-сетей", "Работает в радиусе 10 метров", "Используется только в домашних условиях", "Используется только на военных объектах"], "correct": "Объединяет множество LAN и MAN-сетей"}, {"question": "Примером WAN может быть:", "options": ["Интернет", "Bluetooth", "Сеть в квартире", "Локальная сеть офиса"], "correct": "Интернет"}, {"question": "Какая сеть чаще всего используется для подключения смартфона к наушникам?", "options": ["PAN", "MAN", "LAN", "WAN"], "correct": "PAN"}, {"question": "Что из перечисленного – характеристика LAN?", "options": ["Высокая скорость передачи данных", "Большое покрытие", "Высокая задержка сигнала", "Поддержка спутниковой связи"], "correct": "Высокая скорость передачи данных"}, {"question": "Какой тип сети предполагает личное использование на коротком расстоянии?", "options": ["PAN", "LAN", "MAN", "WAN"], "correct": "PAN"}, {"question": "Сеть, охватывающая несколько стран, – это:", "options": ["WAN", "MAN", "PAN", "LAN"], "correct": "WAN"}, {"question": "Какой тип сети используют в кампусах университетов?", "options": ["MAN", "LAN", "PAN", "GAN"], "correct": "MAN"}, {"question": "Что характерно для MAN-сетей?", "options": ["Использование в пределах одного города", "Медленная передача данных", "Только спутниковая передача", "Использование радиоволн"], "correct": "Использование в пределах одного города"}, {"question": "Какая из сетей наименьшая по масштабу?", "options": ["PAN", "WAN", "MAN", "LAN"], "correct": "PAN"}, {"question": "Где чаще всего используется PAN?", "options": ["Внутри одного устройства", "Между странами", "В школьной сети", "В городской телефонной сети"], "correct": "Внутри одного устройства"}, {"question": "В каком типе сети чаще всего используется Wi-Fi дома?", "options": ["LAN", "WAN", "MAN", "PAN"], "correct": "LAN"}, {"question": "Что объединяет разные сети в одну глобальную структуру?", "options": ["WAN", "Локальная сеть", "Маршрутизаторы", "Личный компьютер"], "correct": "WAN"}, {"question": "Какой тип сети использует Bluetooth?", "options": ["PAN", "WAN", "LAN", "MAN"], "correct": "PAN"}, {"question": "Сеть предприятия в одном здании – это:", "options": ["LAN", "PAN", "WAN", "MAN"], "correct": "LAN"}, {"question": "Примером MAN-сети может быть:", "options": ["Bluetooth-наушники", "Интернет", "Городская сеть видеонаблюдения", "Wi-Fi дома"], "correct": "Bluetooth-наушники"}, {"question": "Какой тип сети предназначен для объединения рабочих станций в офисе?", "options": ["Корпоративная сеть", "Домашняя сеть", "Персональная сеть", "Публичная сеть"], "correct": "Корпоративная сеть"}, {"question": "Что такое корпоративная сеть?", "options": ["Сеть, предназначенная для организации", "Сеть в пределах одного компьютера", "Сеть между странами", "Сеть между друзьями"], "correct": "Сеть, предназначенная для организации"}, {"question": "Домашняя сеть – это:", "options": ["Сеть, объединяющая устройства в доме", "Сеть, соединяющая офисы", "Глобальная сеть", "Сеть в учебном заведении"], "correct": "Сеть, объединяющая устройства в доме"}, {"question": "Какая сеть предназначена для частного использования на близком расстоянии?", "options": ["PAN", "WAN", "MAN", "VPN"], "correct": "PAN"}, {"question": "Публичные сети доступны:", "options": ["Всем пользователям без ограничений", "Только через VPN", "Только по паролю", "Только администраторам"], "correct": "Всем пользователям без ограничений"}, {"question": "Что такое VPN?", "options": ["Виртуальная частная сеть", "Глобальная сеть", "Локальная сеть", "Офисная сеть"], "correct": "Виртуальная частная сеть"}, {"question": "Основное назначение VPN:", "options": ["Обеспечение безопасности и конфиденциальности", "Ускорение интернета", "Передача музыки", "Улучшение качества видео"], "correct": "Обеспечение безопасности и конфиденциальности"}, {"question": "Какая сеть используется для объединения учебных заведений?", "options": ["Образовательная", "Домашняя", "Коммерческая", "Публичная"], "correct": "Образовательная"}, {"question": "Коммерческая сеть предназначена для:", "options": ["Предоставления платных услуг", "Развлечений", "Игры", "Учёбы"], "correct": "Предоставления платных услуг"}, {"question": "Примером публичной сети является:", "options": ["Интернет в кафе", "VPN", "Домашняя Wi-Fi сеть", "Сеть в офисе"], "correct": "Интернет в кафе"}, {"question": "Сеть предприятия называется:", "options": ["Корпоративная сеть", "Общественная сеть", "Городская сеть", "Персональная сеть"], "correct": "Корпоративная сеть"}, {"question": "Сеть для передачи данных внутри одной организации:", "options": ["Корпоративная", "Домашняя", "Глобальная", "Персональная"], "correct": "Корпоративная"}, {"question": "Какая сеть чаще всего используется в гостиницах для гостей?", "options": ["Публичная", "Виртуальная", "Персональная", "Секретная"], "correct": "Публичная"}, {"question": "Какая сеть предоставляет интернет в торговом центре?", "options": ["Публичная", "Частная", "Виртуальная", "Коммерческая"], "correct": "Публичная"}, {"question": "Что характеризует персональную сеть?", "options": ["Используется одним человеком", "Используется несколькими организациями", "Используется в городе", "Используется в стране"], "correct": "Используется одним человеком"}, {"question": "Какая сеть предоставляет доступ к интернету дома?", "options": ["Домашняя", "Корпоративная", "Образовательная", "Публичная"], "correct": "Домашняя"}, {"question": "VPN используется для:", "options": ["Сокрытия IP-адреса", "Повышения сигнала", "Просмотра фильмов", "Подключения к Wi-Fi"], "correct": "Сокрытия IP-адреса"}, {"question": "Какая сеть объединяет компьютеры одной фирмы?", "options": ["Корпоративная", "Публичная", "Персональная", "Домашняя"], "correct": "Корпоративная"}, {"question": "Что обеспечивает безопасность в корпоративной сети?", "options": ["Политика безопасности и контроль доступа", "Пароль Wi-Fi", "Открытый доступ", "Быстрый интернет"], "correct": "Политика безопасности и контроль доступа"}, {"question": "Какая сеть больше подходит для удалённой работы?", "options": ["VPN", "Домашняя", "Публичная", "Образовательная"], "correct": "VPN"}, {"question": "Сеть между филиалами компании – это:", "options": ["Корпоративная", "Персональная", "PAN", "Глобальная"], "correct": "Корпоративная"}, {"question": "Где чаще всего используют образовательную сеть?", "options": ["В школах и вузах", "В магазинах", "В офисах", "В метро"], "correct": "В школах и вузах"}, {"question": "Сеть для работы одного пользователя – это:", "options": ["Персональная", "Публичная", "Домашняя", "Корпоративная"], "correct": "Персональная"}, {"question": "VPN обеспечивает:", "options": ["Анонимность и безопасность", "Прямое подключение к интернету", "Быструю загрузку игр", "Ускорение Wi-Fi"], "correct": "Анонимность и безопасность"}, {"question": "Интернет в аэропорту – это:", "options": ["Публичная сеть", "Персональная сеть", "Корпоративная сеть", "Домашняя сеть"], "correct": "Публичная сеть"}, {"question": "Что является основным устройством для соединения компьютеров в сети?", "options": ["Маршрутизатор", "Принтер", "Монитор", "Клавиатура"], "correct": "Маршрутизатор"}, {"question": "Какой компонент используется для соединения кабелей в сети?", "options": ["Коммутатор", "Мышь", "Процессор", "Память"], "correct": "Коммутатор"}, {"question": "Что такое сетевая карта?", "options": ["Устройство для подключения к сети", "Программа для игр", "Монитор", "Модем"], "correct": "Устройство для подключения к сети"}, {"question": "Основной функцией маршрутизатора является:", "options": ["Направление трафика между сетями", "Хранение данных", "Отображение видео", "Увеличение объема памяти"], "correct": "Направление трафика между сетями"}, {"question": "Коммутатор предназначен для:", "options": ["Соединения устройств в локальной сети", "Печати документов", "Подключения к интернету", "Управления питанием ПК"], "correct": "Соединения устройств в локальной сети"}, {"question": "Что такое сервер?", "options": ["Центральный узел для предоставления ресурсов", "Устройство хранения данных", "Компьютер для игр", "Принтер"], "correct": "Центральный узел для предоставления ресурсов"}, {"question": "Модем служит для:", "options": ["Соединения локальной сети с интернетом", "Увеличения громкости", "Управления сетью", "Вывода изображения"], "correct": "Соединения локальной сети с интернетом"}, {"question": "Клиент в компьютерной сети – это:", "options": ["Пользовательское устройство", "Центральный сервер", "Печатающее устройство", "Операционная система"], "correct": "Пользовательское устройство"}, {"question": "Что передает данные по сети?", "options": ["Кабель", "Сканер", "Видеокарта", "Колонки"], "correct": "Кабель"}, {"question": "Какое устройство чаще всего подключается к модему?", "options": ["Маршрутизатор", "Клавиатура", "Принтер", "Монитор"], "correct": "Маршрутизатор"}, {"question": "Какой компонент используется для управления доступом к ресурсам?", "options": ["Сервер", "Клиент", "Коммутатор", "Кабель"], "correct": "Сервер"}, {"question": "Что обеспечивает физическое соединение между компьютерами?", "options": ["Кабель", "Программа", "Вентилятор", "Блок питания"], "correct": "Кабель"}, {"question": "Какой компонент работает на уровне сетевого трафика?", "options": ["Сетевая карта", "Оперативная память", "Процессор", "Жесткий диск"], "correct": "Сетевая карта"}, {"question": "Что выполняет функцию маршрутизации данных между сетями?", "options": ["Маршрутизатор", "Сканер", "Коммутатор", "Принтер"], "correct": "Маршрутизатор"}, {"question": "Для чего используется сетевой протокол?", "options": ["Для передачи данных по сети", "Для подключения клавиатуры", "Для загрузки видео", "Для копирования файлов на флешку"], "correct": "Для передачи данных по сети"}, {"question": "DHCP-сервер предназначен для:", "options": ["Автоматической выдачи IP-адресов", "Печати документов", "Ручной настройки IP", "Хранения видеофайлов"], "correct": "Автоматической выдачи IP-адресов"}, {"question": "DNS-сервер переводит:", "options": ["Имена сайтов в IP-адреса", "IP-адреса в MAC-адреса", "Пароли в логины", "Данные в звук"], "correct": "Имена сайтов в IP-адреса"}, {"question": "Что является примером сетевого оборудования?", "options": ["Коммутатор", "Проектор", "Флешка", "Колонки"], "correct": "Коммутатор"}, {"question": "Что делает точка доступа Wi-Fi?", "options": ["Обеспечивает беспроводное подключение", "Увеличивает память", "Передаёт звук", "Заряжает устройства"], "correct": "Обеспечивает беспроводное подключение"}, {"question": "MAC-адрес относится к:", "options": ["Аппаратному адресу сетевого устройства", "IP-настройкам", "Месту хранения паролей", "Списку сайтов"], "correct": "Аппаратному адресу сетевого устройства"}, {"question": "Что необходимо для подключения к сети интернет?", "options": ["Модем и провайдер", "Клавиатура и мышь", "Принтер и монитор", "Сканер и проектор"], "correct": "Модем и провайдер"}, {"question": "К какому типу устройств относится маршрутизатор?", "options": ["Сетевое", "Выходное", "Вводное", "Запоминающее"], "correct": "Сетевое"}, {"question": "Какой стандарт обозначает беспроводные сети Wi-Fi?", "options": ["IEEE 802.11", "IEEE 802.3", "IEEE 802.5", "IEEE 1394"], "correct": "IEEE 802.11"}, {"question": "Какой стандарт используется для Ethernet?", "options": ["IEEE 802.3", "IEEE 802.11", "IEEE 802.15", "IEEE 802.1X"], "correct": "IEEE 802.3"}, {"question": "Какой протокол обеспечивает передачу IP-адресов?", "options": ["DHCP", "DNS", "FTP", "HTTP"], "correct": "DHCP"}, {"question": "Какой протокол используется для передачи веб-страниц?", "options": ["HTTP", "SMTP", "FTP", "SSH"], "correct": "HTTP"}, {"question": "Протокол HTTPS отличается от HTTP тем, что:", "options": ["Обеспечивает шифрование", "Использует другой порт", "Не используется в браузерах", "Работает только в Linux"], "correct": "Обеспечивает шифрование"}, {"question": "Какой протокол используется для передачи файлов?", "options": ["FTP", "DNS", "POP3", "IMAP"], "correct": "FTP"}, {"question": "Что означает аббревиатура TCP/IP?", "options": ["Transmission Control Protocol / Internet Protocol", "Transfer Call Protocol / Integrated Protocol", "Text Control Protocol / Internet Protocol", "Total Communication Protocol / Internet Protocol"], "correct": "Transmission Control Protocol / Internet Protocol"}, {"question": "Какой уровень модели OSI отвечает за установку соединения?", "options": ["Сеансовый", "Транспортный", "Сетевой", "Канальный"], "correct": "Сеансовый"}, {"question": "Какая технология используется в локальных сетях Ethernet?", "options": ["CSMA/CD", "FDDI", "Token Ring", "ARPANET"], "correct": "CSMA/CD"}, {"question": "Стандарт IEEE 802.15 применяется для:", "options": ["Персональных беспроводных сетей", "Глобальных сетей", "Локальных сетей", "Кабельного телевидения"], "correct": "Персональных беспроводных сетей"}, {"question": "Какой протокол обеспечивает безопасность соединений через интернет?", "options": ["SSH", "FTP", "Telnet", "SNMP"], "correct": "SSH"}, {"question": "Какой протокол используется для удаленного управления устройствами?", "options": ["SNMP", "DHCP", "HTTP", "POP3"], "correct": "SNMP"}, {"question": "Какой протокол переводит доменные имена в IP-адреса?", "options": ["DNS", "FTP", "DHCP", "SMTP"], "correct": "DNS"}, {"question": "Что такое IPv6?", "options": ["Новый стандарт IP-адресов", "Версия TCP", "Протокол электронной почты", "Программа для шифрования"], "correct": "Новый стандарт IP-адресов"}, {"question": "Какая длина IP-адреса в IPv4?", "options": ["32 бита", "64 бита", "128 бит", "16 бит"], "correct": "32 бита"}, {"question": "Какой порт по умолчанию используется для HTTPS?", "options": ["443", "21", "20", "80"], "correct": "443"}, {"question": "Какой протокол используется для отправки электронной почты?", "options": ["SMTP", "POP3", "IMAP", "HTTP"], "correct": "SMTP"}, {"question": "Что такое NAT в компьютерных сетях?", "options": ["Механизм трансляции сетевых адресов", "Протокол почты", "Программа для чата", "Стандарт беспроводной связи"], "correct": "Механизм трансляции сетевых адресов"}, {"question": "Какая технология обеспечивает виртуальные частные сети?", "options": ["VPN", "VLAN", "WAN", "PAN"], "correct": "VPN"}, {"question": "Что такое VLAN?", "options": ["Виртуальная локальная сеть", "Протокол шифрования", "Программа управления", "Устройство хранения данных"], "correct": "Виртуальная локальная сеть"}, {"question": "Что делает протокол ARP?", "options": ["Сопоставляет IP и MAC-адреса", "Передает видео", "Управляет электронной почтой", "Отвечает за роуминг"], "correct": "Сопоставляет IP и MAC-адреса"}, {"question": "Какой протокол используется для безопасного удаленного доступа?", "options": ["SSH", "Telnet", "FTP", "POP3"], "correct": "SSH"}, {"question": "Какой протокол используется для получения почты по IMAP?", "options": ["IMAP", "SMTP", "HTTP", "FTP"], "correct": "IMAP"}, {"question": "Что обеспечивает протокол SSL?", "options": ["Защищенное соединение", "Сжатие данных", "Управление сетью", "Передачу видео"], "correct": "Защищенное соединение"}, {"question": "Что такое шифрование?", "options": ["Преобразование информации в недоступную форму", "Защита от вирусов", "Хранение данных в облаке", "Удаление данных"], "correct": "Преобразование информации в недоступную форму"}, {"question": "Какой алгоритм симметричного шифрования наиболее распространён?", "options": ["AES", "RSA", "SHA", "ECC"], "correct": "AES"}, {"question": "В чём основное отличие симметричного и асимметричного шифрования?", "options": ["В симметричном один ключ, в асимметричном — два", "Симметричное медленнее", "Используются разные типы данных", "Асимметричное не требует ключей"], "correct": "В симметричном один ключ, в асимметричном — два"}, {"question": "Какой алгоритм используется для асимметричного шифрования?", "options": ["RSA", "DES", "AES", "SHA-256"], "correct": "RSA"}, {"question": "Что такое открытый ключ?", "options": ["Ключ, доступный всем для шифрования", "Ключ, известный только получателю", "Пароль для входа", "Метод аутентификации"], "correct": "Ключ, доступный всем для шифрования"}, {"question": "Для чего используется хэш-функция?", "options": ["Для создания уникального отпечатка данных", "Для восстановления данных", "Для шифрования текста", "Для замены антивируса"], "correct": "Для создания уникального отпечатка данных"}, {"question": "Как называется метод шифрования, при котором каждый символ заменяется другим по определённому правилу?", "options": ["Шифр Цезаря", "RSA", "Хэширование", "DES"], "correct": "Шифр Цезаря"}, {"question": "Что происходит при дешифровке?", "options": ["Данные возвращаются в исходный вид", "Данные сжимаются", "Данные удаляются", "Данные маскируются"], "correct": "Данные возвращаются в исходный вид"}, {"question": "Что означает термин «отказоустойчивость» в сетевых технологиях?", "options": ["Способность системы продолжать работу при сбоях", "Защита от вирусов", "Быстрая передача данных", "Удалённое подключение"], "correct": "Способность системы продолжать работу при сбоях"}, {"question": "Что такое резервирование сетевого соединения?", "options": ["Наличие дополнительного канала на случай отказа основного", "Подключение к Wi-Fi", "Создание логина для подключения", "Снижение скорости интернета"], "correct": "Наличие дополнительного канала на случай отказа основного"}, {"question": "Какой из методов повышает отказоустойчивость сети?", "options": ["Установка резервного маршрутизатора", "Сжатие данных", "Использование общего пароля", "Подключение через VPN"], "correct": "Установка резервного маршрутизатора"}, {"question": "Что такое кластеризация в отказоустойчивых системах?", "options": ["Объединение серверов для обеспечения непрерывной работы", "Разделение сети по зонам", "Сбор данных с нескольких ПК", "Использование одного сервера без резервов"], "correct": "Объединение серверов для обеспечения непрерывной работы"}, {"question": "Какой элемент обеспечивает автоматическое переключение на резервный канал при отказе основного?", "options": ["Балансировщик нагрузки (load balancer)", "Фаервол", "Коммутатор", "Клиент VPN"], "correct": "Балансировщик нагрузки (load balancer)"}, {"question": "Что такое отказ одного компонента без остановки всей системы?", "options": ["Частичный отказ (graceful degradation)", "Атака на сеть", "Поломка сервера", "Резервное копирование"], "correct": "Частичный отказ (graceful degradation)"}, {"question": "Какая топология сети считается наиболее отказоустойчивой?", "options": ["Сетка (mesh)", "Звезда", "Шина", "Кольцо"], "correct": "Сетка (mesh)"}, {"question": "Зачем нужно резервное копирование в сетевой инфраструктуре?", "options": ["Для восстановления данных при сбоях", "Для ускорения соединения", "Для создания паролей", "Для установки драйверов"], "correct": "Для восстановления данных при сбоях"}, {"question": "Что такое аутентификация?", "options": ["Проверка подлинности пользователя", "Сканирование системы", "Назначение прав доступа", "Архивация данных"], "correct": "Проверка подлинности пользователя"}, {"question": "Что такое авторизация?", "options": ["Предоставление прав доступа пользователю", "Установка операционной системы", "Проверка наличия интернета", "Шифрование данных"], "correct": "Предоставление прав доступа пользователю"}, {"question": "Какой из следующих примеров относится к аутентификации?", "options": ["Ввод логина и пароля", "Выдача прав администратора", "Получение доступа к файлу", "Установка антивируса"], "correct": "Ввод логина и пароля"}, {"question": "Что такое двухфакторная аутентификация (2FA)?", "options": ["Использование пароля и дополнительного кода", "Использование двух пользователей", "Проверка сетевого подключения", "Подключение через VPN"], "correct": "Использование пароля и дополнительного кода"}, {"question": "Что используется для авторизации пользователей в системе?", "options": ["Список разрешений и ролей", "IP-адрес", "Уровень сигнала Wi-Fi", "Тип браузера"], "correct": "Список разрешений и ролей"}, {"question": "Какой из следующих методов усиливает безопасность при аутентификации?", "options": ["Биометрические данные (отпечаток пальца, лицо)", "Использование одного устройства", "Простые пароли", "Сохранение пароля в браузере"], "correct": "Биометрические данные (отпечаток пальца, лицо)"}, {"question": "Что происходит, если пользователь прошёл аутентификацию, но не авторизован?", "options": ["Доступ ограничен или запрещён", "Получает полный доступ", "Удаляется из базы данных", "Система выключается"], "correct": "Доступ ограничен или запрещён"}, {"question": "Что такое идентификация в контексте информационной безопасности?", "options": ["Процесс распознавания пользователя перед аутентификацией", "Шифрование данных", "Создание резервной копии", "Установка обновлений"], "correct": "Процесс распознавания пользователя перед аутентификацией"}];
+
+    let currentPool = [];
+    let currentQIndex = 0;
+    let score = 0;
+    let isAnswering = false;
+    let currentCorrectAnswer = "";
+
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function startQuiz() {
+        const rangeValue = document.querySelector('input[name="quiz-range"]:checked').value;
+        
+        if (rangeValue === '1-50') currentPool = allQuestions.slice(0, 50);
+        else if (rangeValue === '51-118') currentPool = allQuestions.slice(50, 118);
+        else currentPool = [...allQuestions];
+
+        shuffle(currentPool);
+        
+        currentQIndex = 0;
+        score = 0;
+        switchScreen('quiz-screen');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        isAnswering = false;
+        const q = currentPool[currentQIndex];
+        currentCorrectAnswer = q.correct;
+        
+        // Сброс кнопки подсказки
+        const hintBtn = document.getElementById('hint-btn');
+        hintBtn.disabled = false;
+        hintBtn.innerText = "💡 50/50";
+        
+        document.getElementById('question-counter').innerText = `Вопрос ${currentQIndex + 1} из ${currentPool.length}`;
+        document.getElementById('score-counter').innerText = `Счет: ${score}`;
+        document.getElementById('progress').style.width = `${(currentQIndex / currentPool.length) * 100}%`;
+        document.getElementById('question-text').innerText = q.question;
+        
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        
+        let options = [...q.options];
+        shuffle(options);
+        
+        options.forEach(optText => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = optText;
+            btn.dataset.text = optText;
+            btn.onclick = () => handleAnswer(optText, q.correct, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function useHint() {
+        if (isAnswering) return;
+        
+        const hintBtn = document.getElementById('hint-btn');
+        hintBtn.disabled = true;
+        
+        const allBtns = Array.from(document.querySelectorAll('.option-btn'));
+        const wrongBtns = allBtns.filter(b => b.dataset.text !== currentCorrectAnswer);
+        
+        // Перемешиваем неправильные ответы
+        shuffle(wrongBtns);
+        
+        // Прячем ровно 2 неправильных ответа
+        if (wrongBtns.length >= 2) {
+            wrongBtns[0].classList.add('hidden-by-hint');
+            wrongBtns[1].classList.add('hidden-by-hint');
+        }
+    }
+
+    function handleAnswer(selected, correct, btnElement) {
+        if (isAnswering) return;
+        isAnswering = true;
+        
+        document.getElementById('hint-btn').disabled = true;
+        const allBtns = document.querySelectorAll('.option-btn');
+        
+        if (selected === correct) {
+            btnElement.classList.add('correct');
+            score++;
+            document.getElementById('score-counter').innerText = `Счет: ${score}`;
+        } else {
+            btnElement.classList.add('wrong');
+            allBtns.forEach(b => {
+                if (b.dataset.text === correct) b.classList.add('correct');
+            });
+        }
+        
+        setTimeout(() => {
+            currentQIndex++;
+            if (currentQIndex < currentPool.length) loadQuestion();
+            else showResults();
+        }, 1200); 
+    }
+
+    function showResults() {
+        switchScreen('result-screen');
+        const percentage = Math.round((score / currentPool.length) * 100);
+        
+        document.getElementById('final-percent').innerText = `${percentage}%`;
+        document.getElementById('final-score').innerText = `Правильно: ${score} из ${currentPool.length}`;
+        document.getElementById('progress').style.width = `100%`;
+        
+        let msg = "Нужно еще потренироваться.";
+        if (percentage >= 90) msg = "Превосходно! Прекрасный результат.";
+        else if (percentage >= 70) msg = "Хороший результат, тест сдан!";
+        else if (percentage >= 50) msg = "Неплохо, но лучше повторить материал.";
+        
+        document.getElementById('result-message').innerText = msg;
+    }
+
+    function backToIntro() {
+        switchScreen('intro-screen');
+    }
+</script>
+</body>
+</html>
