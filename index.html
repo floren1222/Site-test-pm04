@@ -257,6 +257,79 @@
             line-height: 1.2;
         }
 
+        .access-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 26px;
+            border-radius: 999px;
+            padding: 5px 9px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .leaderboard-status {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--line);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 750;
+            line-height: 1.35;
+        }
+
+        .leaderboard-status.online { color: var(--correct); }
+        .leaderboard-status.offline { color: var(--hint-color); }
+        .leaderboard-status.error { color: var(--wrong); }
+
+        .my-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .my-stats-title {
+            grid-column: 1 / -1;
+            margin: 0 0 2px;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .my-stats-note {
+            grid-column: 1 / -1;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 750;
+            line-height: 1.35;
+        }
+
+        .my-stats-item {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.34);
+        }
+
+        .my-stats-item strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .my-stats-item span {
+            display: block;
+            margin-top: 6px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 750;
+            line-height: 1.25;
+        }
+
         .leaderboard-reset {
             border: none;
             background: transparent;
@@ -417,7 +490,17 @@
             transform: scale(0.98);
         }
 
-        .actions-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 2px; }
+        .option-btn.skipped {
+            opacity: 0.45;
+            transform: translateX(8px);
+        }
+
+        .actions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 2px;
+        }
 
         .primary-btn {
             background: linear-gradient(135deg, var(--accent), #14b8a6);
@@ -458,6 +541,34 @@
 
         .hint-btn:hover:not(:disabled) { background: rgba(217, 119, 6, 0.22); transform: translateY(-1px); }
         .hint-btn:disabled { opacity: 0.42; cursor: not-allowed; }
+
+        .secondary-btn {
+            background: var(--surface);
+            color: var(--text-main);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .secondary-btn:hover { background: var(--accent-soft); transform: translateY(-1px); }
+
+        .danger-btn {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--wrong);
+            border: 1px solid rgba(220, 38, 38, 0.22);
+            border-radius: 16px;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .danger-btn:hover { background: rgba(220, 38, 38, 0.16); transform: translateY(-1px); }
 
         .result-percent {
             font-size: 68px;
@@ -571,6 +682,8 @@
             .option-btn { padding: 15px; font-size: 15px; }
             .stats { flex-direction: column; }
             .profile-grid { grid-template-columns: 1fr; }
+            .actions-row { grid-template-columns: 1fr; }
+            .my-stats { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -617,15 +730,20 @@
         </div>
 
         <div class="name-field">
-            <label for="player-name">Имя участника</label>
+            <label for="player-name">Регистрация по нику</label>
             <input id="player-name" type="text" maxlength="24" placeholder="Например: Сикс севен" autocomplete="name">
             <div class="name-hint" id="name-hint"></div>
         </div>
 
         <div class="leaderboard" aria-live="polite">
             <div class="leaderboard-head">
-                <h2>Статистика участников</h2>
-                <button class="leaderboard-reset" type="button" onclick="clearStats()">Очистить</button>
+                <h2>Лидерборд</h2>
+                <span class="access-badge">Просмотр всем</span>
+            </div>
+            <div class="leaderboard-status offline" id="leaderboard-status">Локальный режим. Для общего лидерборда подключите Firebase.</div>
+            <div class="my-stats" id="my-stats">
+                <div class="my-stats-title">Моя статистика</div>
+                <div class="my-stats-note">Введите ник, чтобы увидеть личную статистику.</div>
             </div>
             <div class="leaderboard-list" id="leaderboard-list">
                 <div class="leaderboard-empty">Пока результатов нет. Пройдите тест, и здесь появится рейтинг.</div>
@@ -634,7 +752,7 @@
 
         <div class="info-start-row">
             <button class="info-btn" type="button" onclick="openInfo()" aria-label="Информация о сайте">!</button>
-            <button class="primary-btn" id="start-btn" onclick="startQuiz()" disabled>Начать тест</button>
+            <button class="primary-btn" id="start-btn" onclick="startQuiz()" disabled>Войти и начать тест</button>
         </div>
     </div>
 
@@ -643,13 +761,16 @@
         <div class="stats">
             <span id="question-counter">Вопрос 1</span>
             <span id="score-counter">Счет: 0</span>
+            <span id="time-counter">Время: 00:00</span>
         </div>
         <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
         <div class="question-text" id="question-text"></div>
         <div class="options" id="options-container"></div>
         
         <div class="actions-row">
-            <button class="hint-btn" id="hint-btn" onclick="useHint()">💡 50/50</button>
+            <button class="danger-btn" type="button" onclick="abortQuiz()">Прервать</button>
+            <button class="secondary-btn" type="button" onclick="skipQuestion()">Пропустить</button>
+            <button class="hint-btn" id="hint-btn" onclick="useHint()">Подсказка 50/50</button>
         </div>
     </div>
 
@@ -659,6 +780,7 @@
         <p class="subtitle">Ваш итоговый результат:</p>
         <div class="result-percent" id="final-percent">0%</div>
         <div class="result-score" id="final-score">0 из 0 правильных</div>
+        <p class="subtitle" id="final-details"></p>
         <p class="subtitle" id="result-message"></p>
         <button class="primary-btn" onclick="backToIntro()">На главную</button>
     </div>
@@ -685,7 +807,19 @@
     </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore-compat.js"></script>
 <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBjA4rPN4THK_56vEg-yHP3_0d3G0zCafs",
+        authDomain: "site-fl-a9a86.firebaseapp.com",
+        projectId: "site-fl-a9a86",
+        storageBucket: "site-fl-a9a86.firebasestorage.app",
+        messagingSenderId: "999312816212",
+        appId: "1:999312816212:web:b4ce1160954362ae53d5c1",
+        measurementId: "G-M2YKM8BRRL"
+    };
+
     // 118 уникальных вопросов (без повторов)
     const allQuestions = [{"question": "Как расшифровывается LAN?", "options": ["Local Area Network", "Long Area Network", "Light Access Network", "Linked Access Network"], "correct": "Local Area Network"}, {"question": "Что характеризует LAN-сеть?", "options": ["Ограничена одним зданием или помещением", "Используется только в военной сфере", "Работает по всему миру", "Используется только в спутниковой связи"], "correct": "Ограничена одним зданием или помещением"}, {"question": "Что означает WAN?", "options": ["Wide Area Network", "Wide Access Network", "Wireless Area Network", "Web Area Network"], "correct": "Wide Area Network"}, {"question": "Какой из типов сетей самый крупномасштабный?", "options": ["WAN", "MAN", "PAN", "LAN"], "correct": "WAN"}, {"question": "Что такое MAN-сеть?", "options": ["Сеть в пределах города", "Сеть внутри одного офиса", "Сеть между странами", "Сеть между двумя компьютерами"], "correct": "Сеть в пределах города"}, {"question": "Какая сеть соединяет устройства в пределах одной комнаты?", "options": ["PAN", "WAN", "MAN", "LAN"], "correct": "PAN"}, {"question": "Что означает PAN?", "options": ["Personal Area Network", "Private Access Network", "Public Area Network", "Personal Access Node"], "correct": "Personal Area Network"}, {"question": "Примером LAN-сети может быть:", "options": ["Сеть в пределах школы", "Глобальный интернет", "Связь между странами", "Связь между городами"], "correct": "Сеть в пределах школы"}, {"question": "Какая сеть соединяет несколько LAN-сетей в одном городе?", "options": ["MAN", "PAN", "WAN", "GAN"], "correct": "MAN"}, {"question": "Что означает GAN?", "options": ["Global Area Network", "General Access Network", "Government Area Network", "Graphical Access Network"], "correct": "Global Area Network"}, {"question": "Что характеризует WAN-сеть?", "options": ["Объединяет множество LAN и MAN-сетей", "Работает в радиусе 10 метров", "Используется только в домашних условиях", "Используется только на военных объектах"], "correct": "Объединяет множество LAN и MAN-сетей"}, {"question": "Примером WAN может быть:", "options": ["Интернет", "Bluetooth", "Сеть в квартире", "Локальная сеть офиса"], "correct": "Интернет"}, {"question": "Какая сеть чаще всего используется для подключения смартфона к наушникам?", "options": ["PAN", "MAN", "LAN", "WAN"], "correct": "PAN"}, {"question": "Что из перечисленного – характеристика LAN?", "options": ["Высокая скорость передачи данных", "Большое покрытие", "Высокая задержка сигнала", "Поддержка спутниковой связи"], "correct": "Высокая скорость передачи данных"}, {"question": "Какой тип сети предполагает личное использование на коротком расстоянии?", "options": ["PAN", "LAN", "MAN", "WAN"], "correct": "PAN"}, {"question": "Сеть, охватывающая несколько стран, – это:", "options": ["WAN", "MAN", "PAN", "LAN"], "correct": "WAN"}, {"question": "Какой тип сети используют в кампусах университетов?", "options": ["MAN", "LAN", "PAN", "GAN"], "correct": "MAN"}, {"question": "Что характерно для MAN-сетей?", "options": ["Использование в пределах одного города", "Медленная передача данных", "Только спутниковая передача", "Использование радиоволн"], "correct": "Использование в пределах одного города"}, {"question": "Какая из сетей наименьшая по масштабу?", "options": ["PAN", "WAN", "MAN", "LAN"], "correct": "PAN"}, {"question": "Где чаще всего используется PAN?", "options": ["Внутри одного устройства", "Между странами", "В школьной сети", "В городской телефонной сети"], "correct": "Внутри одного устройства"}, {"question": "В каком типе сети чаще всего используется Wi-Fi дома?", "options": ["LAN", "WAN", "MAN", "PAN"], "correct": "LAN"}, {"question": "Что объединяет разные сети в одну глобальную структуру?", "options": ["WAN", "Локальная сеть", "Маршрутизаторы", "Личный компьютер"], "correct": "WAN"}, {"question": "Какой тип сети использует Bluetooth?", "options": ["PAN", "WAN", "LAN", "MAN"], "correct": "PAN"}, {"question": "Сеть предприятия в одном здании – это:", "options": ["LAN", "PAN", "WAN", "MAN"], "correct": "LAN"}, {"question": "Примером MAN-сети может быть:", "options": ["Bluetooth-наушники", "Интернет", "Городская сеть видеонаблюдения", "Wi-Fi дома"], "correct": "Bluetooth-наушники"}, {"question": "Какой тип сети предназначен для объединения рабочих станций в офисе?", "options": ["Корпоративная сеть", "Домашняя сеть", "Персональная сеть", "Публичная сеть"], "correct": "Корпоративная сеть"}, {"question": "Что такое корпоративная сеть?", "options": ["Сеть, предназначенная для организации", "Сеть в пределах одного компьютера", "Сеть между странами", "Сеть между друзьями"], "correct": "Сеть, предназначенная для организации"}, {"question": "Домашняя сеть – это:", "options": ["Сеть, объединяющая устройства в доме", "Сеть, соединяющая офисы", "Глобальная сеть", "Сеть в учебном заведении"], "correct": "Сеть, объединяющая устройства в доме"}, {"question": "Какая сеть предназначена для частного использования на близком расстоянии?", "options": ["PAN", "WAN", "MAN", "VPN"], "correct": "PAN"}, {"question": "Публичные сети доступны:", "options": ["Всем пользователям без ограничений", "Только через VPN", "Только по паролю", "Только администраторам"], "correct": "Всем пользователям без ограничений"}, {"question": "Что такое VPN?", "options": ["Виртуальная частная сеть", "Глобальная сеть", "Локальная сеть", "Офисная сеть"], "correct": "Виртуальная частная сеть"}, {"question": "Основное назначение VPN:", "options": ["Обеспечение безопасности и конфиденциальности", "Ускорение интернета", "Передача музыки", "Улучшение качества видео"], "correct": "Обеспечение безопасности и конфиденциальности"}, {"question": "Какая сеть используется для объединения учебных заведений?", "options": ["Образовательная", "Домашняя", "Коммерческая", "Публичная"], "correct": "Образовательная"}, {"question": "Коммерческая сеть предназначена для:", "options": ["Предоставления платных услуг", "Развлечений", "Игры", "Учёбы"], "correct": "Предоставления платных услуг"}, {"question": "Примером публичной сети является:", "options": ["Интернет в кафе", "VPN", "Домашняя Wi-Fi сеть", "Сеть в офисе"], "correct": "Интернет в кафе"}, {"question": "Сеть предприятия называется:", "options": ["Корпоративная сеть", "Общественная сеть", "Городская сеть", "Персональная сеть"], "correct": "Корпоративная сеть"}, {"question": "Сеть для передачи данных внутри одной организации:", "options": ["Корпоративная", "Домашняя", "Глобальная", "Персональная"], "correct": "Корпоративная"}, {"question": "Какая сеть чаще всего используется в гостиницах для гостей?", "options": ["Публичная", "Виртуальная", "Персональная", "Секретная"], "correct": "Публичная"}, {"question": "Какая сеть предоставляет интернет в торговом центре?", "options": ["Публичная", "Частная", "Виртуальная", "Коммерческая"], "correct": "Публичная"}, {"question": "Что характеризует персональную сеть?", "options": ["Используется одним человеком", "Используется несколькими организациями", "Используется в городе", "Используется в стране"], "correct": "Используется одним человеком"}, {"question": "Какая сеть предоставляет доступ к интернету дома?", "options": ["Домашняя", "Корпоративная", "Образовательная", "Публичная"], "correct": "Домашняя"}, {"question": "VPN используется для:", "options": ["Сокрытия IP-адреса", "Повышения сигнала", "Просмотра фильмов", "Подключения к Wi-Fi"], "correct": "Сокрытия IP-адреса"}, {"question": "Какая сеть объединяет компьютеры одной фирмы?", "options": ["Корпоративная", "Публичная", "Персональная", "Домашняя"], "correct": "Корпоративная"}, {"question": "Что обеспечивает безопасность в корпоративной сети?", "options": ["Политика безопасности и контроль доступа", "Пароль Wi-Fi", "Открытый доступ", "Быстрый интернет"], "correct": "Политика безопасности и контроль доступа"}, {"question": "Какая сеть больше подходит для удалённой работы?", "options": ["VPN", "Домашняя", "Публичная", "Образовательная"], "correct": "VPN"}, {"question": "Сеть между филиалами компании – это:", "options": ["Корпоративная", "Персональная", "PAN", "Глобальная"], "correct": "Корпоративная"}, {"question": "Где чаще всего используют образовательную сеть?", "options": ["В школах и вузах", "В магазинах", "В офисах", "В метро"], "correct": "В школах и вузах"}, {"question": "Сеть для работы одного пользователя – это:", "options": ["Персональная", "Публичная", "Домашняя", "Корпоративная"], "correct": "Персональная"}, {"question": "VPN обеспечивает:", "options": ["Анонимность и безопасность", "Прямое подключение к интернету", "Быструю загрузку игр", "Ускорение Wi-Fi"], "correct": "Анонимность и безопасность"}, {"question": "Интернет в аэропорту – это:", "options": ["Публичная сеть", "Персональная сеть", "Корпоративная сеть", "Домашняя сеть"], "correct": "Публичная сеть"}, {"question": "Что является основным устройством для соединения компьютеров в сети?", "options": ["Маршрутизатор", "Принтер", "Монитор", "Клавиатура"], "correct": "Маршрутизатор"}, {"question": "Какой компонент используется для соединения кабелей в сети?", "options": ["Коммутатор", "Мышь", "Процессор", "Память"], "correct": "Коммутатор"}, {"question": "Что такое сетевая карта?", "options": ["Устройство для подключения к сети", "Программа для игр", "Монитор", "Модем"], "correct": "Устройство для подключения к сети"}, {"question": "Основной функцией маршрутизатора является:", "options": ["Направление трафика между сетями", "Хранение данных", "Отображение видео", "Увеличение объема памяти"], "correct": "Направление трафика между сетями"}, {"question": "Коммутатор предназначен для:", "options": ["Соединения устройств в локальной сети", "Печати документов", "Подключения к интернету", "Управления питанием ПК"], "correct": "Соединения устройств в локальной сети"}, {"question": "Что такое сервер?", "options": ["Центральный узел для предоставления ресурсов", "Устройство хранения данных", "Компьютер для игр", "Принтер"], "correct": "Центральный узел для предоставления ресурсов"}, {"question": "Модем служит для:", "options": ["Соединения локальной сети с интернетом", "Увеличения громкости", "Управления сетью", "Вывода изображения"], "correct": "Соединения локальной сети с интернетом"}, {"question": "Клиент в компьютерной сети – это:", "options": ["Пользовательское устройство", "Центральный сервер", "Печатающее устройство", "Операционная система"], "correct": "Пользовательское устройство"}, {"question": "Что передает данные по сети?", "options": ["Кабель", "Сканер", "Видеокарта", "Колонки"], "correct": "Кабель"}, {"question": "Какое устройство чаще всего подключается к модему?", "options": ["Маршрутизатор", "Клавиатура", "Принтер", "Монитор"], "correct": "Маршрутизатор"}, {"question": "Какой компонент используется для управления доступом к ресурсам?", "options": ["Сервер", "Клиент", "Коммутатор", "Кабель"], "correct": "Сервер"}, {"question": "Что обеспечивает физическое соединение между компьютерами?", "options": ["Кабель", "Программа", "Вентилятор", "Блок питания"], "correct": "Кабель"}, {"question": "Какой компонент работает на уровне сетевого трафика?", "options": ["Сетевая карта", "Оперативная память", "Процессор", "Жесткий диск"], "correct": "Сетевая карта"}, {"question": "Что выполняет функцию маршрутизации данных между сетями?", "options": ["Маршрутизатор", "Сканер", "Коммутатор", "Принтер"], "correct": "Маршрутизатор"}, {"question": "Для чего используется сетевой протокол?", "options": ["Для передачи данных по сети", "Для подключения клавиатуры", "Для загрузки видео", "Для копирования файлов на флешку"], "correct": "Для передачи данных по сети"}, {"question": "DHCP-сервер предназначен для:", "options": ["Автоматической выдачи IP-адресов", "Печати документов", "Ручной настройки IP", "Хранения видеофайлов"], "correct": "Автоматической выдачи IP-адресов"}, {"question": "DNS-сервер переводит:", "options": ["Имена сайтов в IP-адреса", "IP-адреса в MAC-адреса", "Пароли в логины", "Данные в звук"], "correct": "Имена сайтов в IP-адреса"}, {"question": "Что является примером сетевого оборудования?", "options": ["Коммутатор", "Проектор", "Флешка", "Колонки"], "correct": "Коммутатор"}, {"question": "Что делает точка доступа Wi-Fi?", "options": ["Обеспечивает беспроводное подключение", "Увеличивает память", "Передаёт звук", "Заряжает устройства"], "correct": "Обеспечивает беспроводное подключение"}, {"question": "MAC-адрес относится к:", "options": ["Аппаратному адресу сетевого устройства", "IP-настройкам", "Месту хранения паролей", "Списку сайтов"], "correct": "Аппаратному адресу сетевого устройства"}, {"question": "Что необходимо для подключения к сети интернет?", "options": ["Модем и провайдер", "Клавиатура и мышь", "Принтер и монитор", "Сканер и проектор"], "correct": "Модем и провайдер"}, {"question": "К какому типу устройств относится маршрутизатор?", "options": ["Сетевое", "Выходное", "Вводное", "Запоминающее"], "correct": "Сетевое"}, {"question": "Какой стандарт обозначает беспроводные сети Wi-Fi?", "options": ["IEEE 802.11", "IEEE 802.3", "IEEE 802.5", "IEEE 1394"], "correct": "IEEE 802.11"}, {"question": "Какой стандарт используется для Ethernet?", "options": ["IEEE 802.3", "IEEE 802.11", "IEEE 802.15", "IEEE 802.1X"], "correct": "IEEE 802.3"}, {"question": "Какой протокол обеспечивает передачу IP-адресов?", "options": ["DHCP", "DNS", "FTP", "HTTP"], "correct": "DHCP"}, {"question": "Какой протокол используется для передачи веб-страниц?", "options": ["HTTP", "SMTP", "FTP", "SSH"], "correct": "HTTP"}, {"question": "Протокол HTTPS отличается от HTTP тем, что:", "options": ["Обеспечивает шифрование", "Использует другой порт", "Не используется в браузерах", "Работает только в Linux"], "correct": "Обеспечивает шифрование"}, {"question": "Какой протокол используется для передачи файлов?", "options": ["FTP", "DNS", "POP3", "IMAP"], "correct": "FTP"}, {"question": "Что означает аббревиатура TCP/IP?", "options": ["Transmission Control Protocol / Internet Protocol", "Transfer Call Protocol / Integrated Protocol", "Text Control Protocol / Internet Protocol", "Total Communication Protocol / Internet Protocol"], "correct": "Transmission Control Protocol / Internet Protocol"}, {"question": "Какой уровень модели OSI отвечает за установку соединения?", "options": ["Сеансовый", "Транспортный", "Сетевой", "Канальный"], "correct": "Сеансовый"}, {"question": "Какая технология используется в локальных сетях Ethernet?", "options": ["CSMA/CD", "FDDI", "Token Ring", "ARPANET"], "correct": "CSMA/CD"}, {"question": "Стандарт IEEE 802.15 применяется для:", "options": ["Персональных беспроводных сетей", "Глобальных сетей", "Локальных сетей", "Кабельного телевидения"], "correct": "Персональных беспроводных сетей"}, {"question": "Какой протокол обеспечивает безопасность соединений через интернет?", "options": ["SSH", "FTP", "Telnet", "SNMP"], "correct": "SSH"}, {"question": "Какой протокол используется для удаленного управления устройствами?", "options": ["SNMP", "DHCP", "HTTP", "POP3"], "correct": "SNMP"}, {"question": "Какой протокол переводит доменные имена в IP-адреса?", "options": ["DNS", "FTP", "DHCP", "SMTP"], "correct": "DNS"}, {"question": "Что такое IPv6?", "options": ["Новый стандарт IP-адресов", "Версия TCP", "Протокол электронной почты", "Программа для шифрования"], "correct": "Новый стандарт IP-адресов"}, {"question": "Какая длина IP-адреса в IPv4?", "options": ["32 бита", "64 бита", "128 бит", "16 бит"], "correct": "32 бита"}, {"question": "Какой порт по умолчанию используется для HTTPS?", "options": ["443", "21", "20", "80"], "correct": "443"}, {"question": "Какой протокол используется для отправки электронной почты?", "options": ["SMTP", "POP3", "IMAP", "HTTP"], "correct": "SMTP"}, {"question": "Что такое NAT в компьютерных сетях?", "options": ["Механизм трансляции сетевых адресов", "Протокол почты", "Программа для чата", "Стандарт беспроводной связи"], "correct": "Механизм трансляции сетевых адресов"}, {"question": "Какая технология обеспечивает виртуальные частные сети?", "options": ["VPN", "VLAN", "WAN", "PAN"], "correct": "VPN"}, {"question": "Что такое VLAN?", "options": ["Виртуальная локальная сеть", "Протокол шифрования", "Программа управления", "Устройство хранения данных"], "correct": "Виртуальная локальная сеть"}, {"question": "Что делает протокол ARP?", "options": ["Сопоставляет IP и MAC-адреса", "Передает видео", "Управляет электронной почтой", "Отвечает за роуминг"], "correct": "Сопоставляет IP и MAC-адреса"}, {"question": "Какой протокол используется для безопасного удаленного доступа?", "options": ["SSH", "Telnet", "FTP", "POP3"], "correct": "SSH"}, {"question": "Какой протокол используется для получения почты по IMAP?", "options": ["IMAP", "SMTP", "HTTP", "FTP"], "correct": "IMAP"}, {"question": "Что обеспечивает протокол SSL?", "options": ["Защищенное соединение", "Сжатие данных", "Управление сетью", "Передачу видео"], "correct": "Защищенное соединение"}, {"question": "Что такое шифрование?", "options": ["Преобразование информации в недоступную форму", "Защита от вирусов", "Хранение данных в облаке", "Удаление данных"], "correct": "Преобразование информации в недоступную форму"}, {"question": "Какой алгоритм симметричного шифрования наиболее распространён?", "options": ["AES", "RSA", "SHA", "ECC"], "correct": "AES"}, {"question": "В чём основное отличие симметричного и асимметричного шифрования?", "options": ["В симметричном один ключ, в асимметричном — два", "Симметричное медленнее", "Используются разные типы данных", "Асимметричное не требует ключей"], "correct": "В симметричном один ключ, в асимметричном — два"}, {"question": "Какой алгоритм используется для асимметричного шифрования?", "options": ["RSA", "DES", "AES", "SHA-256"], "correct": "RSA"}, {"question": "Что такое открытый ключ?", "options": ["Ключ, доступный всем для шифрования", "Ключ, известный только получателю", "Пароль для входа", "Метод аутентификации"], "correct": "Ключ, доступный всем для шифрования"}, {"question": "Для чего используется хэш-функция?", "options": ["Для создания уникального отпечатка данных", "Для восстановления данных", "Для шифрования текста", "Для замены антивируса"], "correct": "Для создания уникального отпечатка данных"}, {"question": "Как называется метод шифрования, при котором каждый символ заменяется другим по определённому правилу?", "options": ["Шифр Цезаря", "RSA", "Хэширование", "DES"], "correct": "Шифр Цезаря"}, {"question": "Что происходит при дешифровке?", "options": ["Данные возвращаются в исходный вид", "Данные сжимаются", "Данные удаляются", "Данные маскируются"], "correct": "Данные возвращаются в исходный вид"}, {"question": "Что означает термин «отказоустойчивость» в сетевых технологиях?", "options": ["Способность системы продолжать работу при сбоях", "Защита от вирусов", "Быстрая передача данных", "Удалённое подключение"], "correct": "Способность системы продолжать работу при сбоях"}, {"question": "Что такое резервирование сетевого соединения?", "options": ["Наличие дополнительного канала на случай отказа основного", "Подключение к Wi-Fi", "Создание логина для подключения", "Снижение скорости интернета"], "correct": "Наличие дополнительного канала на случай отказа основного"}, {"question": "Какой из методов повышает отказоустойчивость сети?", "options": ["Установка резервного маршрутизатора", "Сжатие данных", "Использование общего пароля", "Подключение через VPN"], "correct": "Установка резервного маршрутизатора"}, {"question": "Что такое кластеризация в отказоустойчивых системах?", "options": ["Объединение серверов для обеспечения непрерывной работы", "Разделение сети по зонам", "Сбор данных с нескольких ПК", "Использование одного сервера без резервов"], "correct": "Объединение серверов для обеспечения непрерывной работы"}, {"question": "Какой элемент обеспечивает автоматическое переключение на резервный канал при отказе основного?", "options": ["Балансировщик нагрузки (load balancer)", "Фаервол", "Коммутатор", "Клиент VPN"], "correct": "Балансировщик нагрузки (load balancer)"}, {"question": "Что такое отказ одного компонента без остановки всей системы?", "options": ["Частичный отказ (graceful degradation)", "Атака на сеть", "Поломка сервера", "Резервное копирование"], "correct": "Частичный отказ (graceful degradation)"}, {"question": "Какая топология сети считается наиболее отказоустойчивой?", "options": ["Сетка (mesh)", "Звезда", "Шина", "Кольцо"], "correct": "Сетка (mesh)"}, {"question": "Зачем нужно резервное копирование в сетевой инфраструктуре?", "options": ["Для восстановления данных при сбоях", "Для ускорения соединения", "Для создания паролей", "Для установки драйверов"], "correct": "Для восстановления данных при сбоях"}, {"question": "Что такое аутентификация?", "options": ["Проверка подлинности пользователя", "Сканирование системы", "Назначение прав доступа", "Архивация данных"], "correct": "Проверка подлинности пользователя"}, {"question": "Что такое авторизация?", "options": ["Предоставление прав доступа пользователю", "Установка операционной системы", "Проверка наличия интернета", "Шифрование данных"], "correct": "Предоставление прав доступа пользователю"}, {"question": "Какой из следующих примеров относится к аутентификации?", "options": ["Ввод логина и пароля", "Выдача прав администратора", "Получение доступа к файлу", "Установка антивируса"], "correct": "Ввод логина и пароля"}, {"question": "Что такое двухфакторная аутентификация (2FA)?", "options": ["Использование пароля и дополнительного кода", "Использование двух пользователей", "Проверка сетевого подключения", "Подключение через VPN"], "correct": "Использование пароля и дополнительного кода"}, {"question": "Что используется для авторизации пользователей в системе?", "options": ["Список разрешений и ролей", "IP-адрес", "Уровень сигнала Wi-Fi", "Тип браузера"], "correct": "Список разрешений и ролей"}, {"question": "Какой из следующих методов усиливает безопасность при аутентификации?", "options": ["Биометрические данные (отпечаток пальца, лицо)", "Использование одного устройства", "Простые пароли", "Сохранение пароля в браузере"], "correct": "Биометрические данные (отпечаток пальца, лицо)"}, {"question": "Что происходит, если пользователь прошёл аутентификацию, но не авторизован?", "options": ["Доступ ограничен или запрещён", "Получает полный доступ", "Удаляется из базы данных", "Система выключается"], "correct": "Доступ ограничен или запрещён"}, {"question": "Что такое идентификация в контексте информационной безопасности?", "options": ["Процесс распознавания пользователя перед аутентификацией", "Шифрование данных", "Создание резервной копии", "Установка обновлений"], "correct": "Процесс распознавания пользователя перед аутентификацией"}];
 
@@ -697,7 +831,18 @@
     let currentPlayerName = "";
     let currentRangeLabel = "";
     const statsKey = "pm04QuizStats";
+    const visitsKey = "pm04QuizVisits";
+    const visitDayKey = "pm04QuizVisitDay";
     const nickKey = "pm04QuizNick";
+    let cachedStats = [];
+    let cachedVisits = 0;
+    let onlineDb = null;
+    let isOnlineLeaderboard = false;
+    let hintsUsed = 0;
+    let skippedCount = 0;
+    let testStartedAt = 0;
+    let elapsedSeconds = 0;
+    let timerInterval = null;
 
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
@@ -728,7 +873,7 @@
         document.getElementById('profile-modal').classList.remove('active');
     }
 
-    function getStats() {
+    function getLocalStats() {
         try {
             return JSON.parse(localStorage.getItem(statsKey)) || [];
         } catch {
@@ -736,11 +881,173 @@
         }
     }
 
-    function saveStats(result) {
-        const stats = getStats();
+    function getLocalVisits() {
+        return Number(localStorage.getItem(visitsKey)) || 0;
+    }
+
+    function getStats() {
+        return cachedStats;
+    }
+
+    async function saveStats(result) {
+        if (isOnlineLeaderboard && onlineDb) {
+            try {
+                await onlineDb.collection('pm04Results').add({
+                    ...result,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                return;
+            } catch (error) {
+                setLeaderboardStatus('error', 'Не удалось отправить онлайн-результат. Сохранено локально.');
+            }
+        }
+
+        const stats = getLocalStats();
         stats.push(result);
         localStorage.setItem(statsKey, JSON.stringify(stats.slice(-200)));
+        cachedStats = stats.slice(-200);
         renderStats();
+        renderMyStats();
+    }
+
+    async function recordVisit() {
+        const today = new Date().toISOString().slice(0, 10);
+        if (localStorage.getItem(visitDayKey) === today) return;
+
+        localStorage.setItem(visitDayKey, today);
+        cachedVisits = getLocalVisits() + 1;
+        localStorage.setItem(visitsKey, String(cachedVisits));
+
+        if (isOnlineLeaderboard && onlineDb) {
+            try {
+                await onlineDb.collection('pm04Visits').add({
+                    day: today,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch {
+                setLeaderboardStatus('error', 'Онлайн-лидерборд работает, но посещение не записалось. Проверьте rules.');
+            }
+        }
+    }
+
+    function hasFirebaseConfig() {
+        return firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE_') &&
+            firebaseConfig.projectId && !firebaseConfig.projectId.startsWith('PASTE_');
+    }
+
+    function setLeaderboardStatus(type, text) {
+        const status = document.getElementById('leaderboard-status');
+        if (!status) return;
+        status.className = `leaderboard-status ${type}`;
+        status.innerText = text;
+    }
+
+    function initLeaderboard() {
+        cachedStats = getLocalStats();
+        cachedVisits = getLocalVisits();
+
+        if (!hasFirebaseConfig()) {
+            isOnlineLeaderboard = false;
+            setLeaderboardStatus('offline', 'Локальный режим: результаты видны только на этом устройстве.');
+            renderStats();
+            renderMyStats();
+            recordVisit();
+            return;
+        }
+
+        if (!window.firebase || !firebase.firestore) {
+            isOnlineLeaderboard = false;
+            setLeaderboardStatus('error', 'Firebase не загрузился. Проверьте интернет или настройки GitHub Pages.');
+            renderStats();
+            renderMyStats();
+            recordVisit();
+            return;
+        }
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            onlineDb = firebase.firestore();
+            isOnlineLeaderboard = true;
+            setLeaderboardStatus('online', 'Онлайн-лидерборд включен: результаты общие для всех устройств.');
+
+            onlineDb.collection('pm04Results')
+                .orderBy('createdAt', 'desc')
+                .limit(500)
+                .onSnapshot(snapshot => {
+                    cachedStats = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        return {
+                            name: data.name || 'Без имени',
+                            score: Number(data.score) || 0,
+                            total: Number(data.total) || 0,
+                            percentage: Number(data.percentage) || 0,
+                            range: data.range || 'Тест',
+                            date: data.date || '',
+                            hintsUsed: Number(data.hintsUsed) || 0,
+                            skipped: Number(data.skipped) || 0,
+                            elapsedSeconds: Number(data.elapsedSeconds) || 0
+                        };
+                    });
+                    renderStats();
+                    renderMyStats();
+                }, () => {
+                    isOnlineLeaderboard = false;
+                    cachedStats = getLocalStats();
+                    setLeaderboardStatus('error', 'Ошибка чтения Firebase. Временно показан локальный лидерборд.');
+                    renderStats();
+                    renderMyStats();
+                });
+
+            onlineDb.collection('pm04Visits')
+                .orderBy('createdAt', 'desc')
+                .limit(1000)
+                .onSnapshot(snapshot => {
+                    cachedVisits = snapshot.size;
+                });
+
+            recordVisit();
+        } catch (error) {
+            isOnlineLeaderboard = false;
+            setLeaderboardStatus('error', 'Firebase настроен неверно. Проверьте config в index.html.');
+            renderStats();
+            renderMyStats();
+            recordVisit();
+        }
+    }
+
+    function renderMyStats() {
+        const summary = document.getElementById('my-stats');
+        if (!summary) return;
+
+        const name = document.getElementById('player-name')?.value.trim();
+        if (!name) {
+            summary.innerHTML = `
+                <div class="my-stats-title">Моя статистика</div>
+                <div class="my-stats-note">Введите ник, чтобы увидеть личную статистику.</div>
+            `;
+            return;
+        }
+
+        const profile = getProfiles().find(item => normalizeName(item.name) === normalizeName(name));
+        if (!profile) {
+            summary.innerHTML = `
+                <div class="my-stats-title">Моя статистика</div>
+                <div class="my-stats-note">Для ника ${escapeHtml(name)} пока нет завершенных тестов.</div>
+            `;
+            return;
+        }
+
+        summary.innerHTML = `
+            <div class="my-stats-title">Моя статистика</div>
+            <div class="my-stats-item"><strong>${profile.attempts}</strong><span>тестов пройдено</span></div>
+            <div class="my-stats-item"><strong>${profile.totalCorrect}/${profile.totalQuestions}</strong><span>правильных всего</span></div>
+            <div class="my-stats-item"><strong>${profile.bestPercentage}%</strong><span>лучший результат</span></div>
+            <div class="my-stats-item"><strong>${profile.averagePercentage}%</strong><span>средний результат</span></div>
+            <div class="my-stats-item"><strong>${profile.totalHints}</strong><span>подсказок использовано</span></div>
+            <div class="my-stats-item"><strong>${profile.totalSkipped}</strong><span>вопросов пропущено</span></div>
+            <div class="my-stats-item"><strong>${formatTime(profile.totalTime)}</strong><span>времени всего</span></div>
+            <div class="my-stats-item"><strong>${formatTime(profile.averageTime)}</strong><span>среднее время</span></div>
+        `;
     }
 
     function getProfiles() {
@@ -759,6 +1066,9 @@
                     bestPercentage: 0,
                     bestScore: 0,
                     bestTotal: 0,
+                    totalHints: 0,
+                    totalSkipped: 0,
+                    totalTime: 0,
                     lastDate: item.date || ""
                 });
             }
@@ -768,6 +1078,9 @@
             profile.attempts++;
             profile.totalCorrect += Number(item.score) || 0;
             profile.totalQuestions += Number(item.total) || 0;
+            profile.totalHints += Number(item.hintsUsed) || 0;
+            profile.totalSkipped += Number(item.skipped) || 0;
+            profile.totalTime += Number(item.elapsedSeconds) || 0;
             profile.lastDate = item.date || profile.lastDate;
 
             if ((Number(item.percentage) || 0) > profile.bestPercentage) {
@@ -782,6 +1095,9 @@
                 ...profile,
                 averagePercentage: profile.totalQuestions
                     ? Math.round((profile.totalCorrect / profile.totalQuestions) * 100)
+                    : 0,
+                averageTime: profile.attempts
+                    ? Math.round(profile.totalTime / profile.attempts)
                     : 0
             }))
             .sort((a, b) =>
@@ -797,7 +1113,7 @@
 
         const profiles = getProfiles();
         if (profiles.length === 0) {
-            list.innerHTML = '<div class="leaderboard-empty">Пока результатов нет. Введите ник, пройдите тест, и здесь появится лидерборд.</div>';
+            list.innerHTML = '<div class="leaderboard-empty">Лидерборд открыт для просмотра всем. Чтобы попасть сюда, введите ник и пройдите тест.</div>';
             return;
         }
 
@@ -837,12 +1153,34 @@
                 <strong>${profile.averagePercentage}%</strong>
                 <span>средний результат</span>
             </div>
+            <div class="profile-stat">
+                <strong>${profile.totalHints}</strong>
+                <span>подсказок использовано</span>
+            </div>
+            <div class="profile-stat">
+                <strong>${profile.totalSkipped}</strong>
+                <span>вопросов пропущено</span>
+            </div>
+            <div class="profile-stat">
+                <strong>${formatTime(profile.totalTime)}</strong>
+                <span>времени потрачено всего</span>
+            </div>
+            <div class="profile-stat">
+                <strong>${formatTime(profile.averageTime)}</strong>
+                <span>среднее время теста</span>
+            </div>
         `;
         document.getElementById('profile-modal').classList.add('active');
     }
 
     function clearStats() {
+        if (isOnlineLeaderboard) {
+            setLeaderboardStatus('online', 'Онлайн-лидерборд нельзя очистить с сайта. Удаление делается в Firebase Console.');
+            return;
+        }
+
         localStorage.removeItem(statsKey);
+        cachedStats = [];
         renderStats();
     }
 
@@ -859,6 +1197,38 @@
         return String(name || "").trim().toLowerCase();
     }
 
+    function formatTime(totalSeconds) {
+        const safeSeconds = Math.max(0, Number(totalSeconds) || 0);
+        const minutes = Math.floor(safeSeconds / 60);
+        const seconds = safeSeconds % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+        stopTimer();
+        testStartedAt = Date.now();
+        elapsedSeconds = 0;
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        if (testStartedAt) {
+            elapsedSeconds = Math.floor((Date.now() - testStartedAt) / 1000);
+        }
+    }
+
+    function updateTimer() {
+        if (!testStartedAt) return;
+        elapsedSeconds = Math.floor((Date.now() - testStartedAt) / 1000);
+        const timeCounter = document.getElementById('time-counter');
+        if (timeCounter) timeCounter.innerText = `Время: ${formatTime(elapsedSeconds)}`;
+    }
+
     function syncNickState() {
         const input = document.getElementById('player-name');
         const startBtn = document.getElementById('start-btn');
@@ -866,11 +1236,13 @@
         const name = input.value.trim();
 
         startBtn.disabled = name.length === 0;
-        hint.innerText = name.length === 0 ? "Введите ник, чтобы начать тест." : "";
+        hint.innerText = name.length === 0 ? "Смотреть лидерборд можно без ника. Чтобы пройти тест и попасть в рейтинг, введите ник." : "";
 
         if (name.length > 0) {
             localStorage.setItem(nickKey, name);
         }
+
+        renderMyStats();
     }
 
     function initNick() {
@@ -902,7 +1274,10 @@
         
         currentQIndex = 0;
         score = 0;
+        hintsUsed = 0;
+        skippedCount = 0;
         switchScreen('quiz-screen');
+        startTimer();
         loadQuestion();
     }
 
@@ -954,6 +1329,34 @@
             wrongBtns[0].classList.add('hidden-by-hint');
             wrongBtns[1].classList.add('hidden-by-hint');
         }
+        hintsUsed++;
+    }
+
+    function skipQuestion() {
+        if (isAnswering) return;
+        isAnswering = true;
+        skippedCount++;
+        document.getElementById('hint-btn').disabled = true;
+
+        document.querySelectorAll('.option-btn').forEach(btn => btn.classList.add('skipped'));
+
+        setTimeout(() => {
+            currentQIndex++;
+            if (currentQIndex < currentPool.length) loadQuestion();
+            else showResults();
+        }, 220);
+    }
+
+    function abortQuiz() {
+        if (!confirm('Прервать тест? Текущий результат не попадет в лидерборд.')) return;
+        stopTimer();
+        testStartedAt = 0;
+        currentQIndex = 0;
+        score = 0;
+        hintsUsed = 0;
+        skippedCount = 0;
+        switchScreen('intro-screen');
+        renderStats();
     }
 
     function handleAnswer(selected, correct, btnElement) {
@@ -982,11 +1385,13 @@
     }
 
     function showResults() {
+        stopTimer();
         switchScreen('result-screen');
         const percentage = Math.round((score / currentPool.length) * 100);
         
         document.getElementById('final-percent').innerText = `${percentage}%`;
         document.getElementById('final-score').innerText = `Правильно: ${score} из ${currentPool.length}`;
+        document.getElementById('final-details').innerText = `Время: ${formatTime(elapsedSeconds)} · Пропущено: ${skippedCount} · Подсказок: ${hintsUsed}`;
         document.getElementById('progress').style.width = `100%`;
         
         let msg = "Материал лучше повторить и пройти тест еще раз.";
@@ -1001,8 +1406,12 @@
             total: currentPool.length,
             percentage,
             range: currentRangeLabel,
-            date: new Date().toLocaleDateString('ru-RU')
+            date: new Date().toLocaleDateString('ru-RU'),
+            hintsUsed,
+            skipped: skippedCount,
+            elapsedSeconds
         });
+        testStartedAt = 0;
     }
 
     function backToIntro() {
@@ -1011,7 +1420,7 @@
     }
 
     initNick();
-    renderStats();
+    initLeaderboard();
 </script>
 </body>
 </html>
