@@ -286,9 +286,9 @@
 
         .my-stats {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            padding: 12px 16px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 7px;
+            padding: 12px 14px;
             border-bottom: 1px solid var(--line);
         }
 
@@ -310,22 +310,24 @@
 
         .my-stats-item {
             border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 10px;
+            border-radius: 12px;
+            padding: 8px;
             background: rgba(255, 255, 255, 0.34);
+            min-width: 0;
         }
 
         .my-stats-item strong {
             display: block;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 1;
+            overflow-wrap: anywhere;
         }
 
         .my-stats-item span {
             display: block;
             margin-top: 6px;
             color: var(--text-secondary);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 750;
             line-height: 1.25;
         }
@@ -620,6 +622,9 @@
 
         .modal {
             width: min(420px, 100%);
+            max-height: min(86vh, 720px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
             background: var(--card-bg);
             border: 1px solid var(--line);
             border-radius: 24px;
@@ -642,6 +647,30 @@
         }
 
         .modal-actions { margin-top: 18px; }
+
+        .info-stat {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-top: 16px;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--surface);
+        }
+
+        .info-stat span {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .info-stat strong {
+            color: var(--accent);
+            font-size: 20px;
+            font-weight: 900;
+        }
 
         .profile-grid {
             display: grid;
@@ -681,9 +710,11 @@
             .question-text { font-size: 18px; padding: 16px; }
             .option-btn { padding: 15px; font-size: 15px; }
             .stats { flex-direction: column; }
+            .modal-overlay { padding: 10px; align-items: start; overflow-y: auto; }
+            .modal { max-height: calc(100vh - 20px); border-radius: 20px; padding: 18px; }
             .profile-grid { grid-template-columns: 1fr; }
             .actions-row { grid-template-columns: 1fr; }
-            .my-stats { grid-template-columns: 1fr; }
+            .my-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
     </style>
 </head>
@@ -790,6 +821,10 @@
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="info-title">
         <h2 id="info-title">О сайте</h2>
         <p>Сайт для подготовки к тестированию ПМ 04. Создано через ИИ и улучшено Floren.</p>
+        <div class="info-stat">
+            <span>Посещений сайта всеми пользователями</span>
+            <strong id="global-visits-count">0</strong>
+        </div>
         <div class="modal-actions">
             <button class="primary-btn" type="button" onclick="closeInfo()">Понятно</button>
         </div>
@@ -832,7 +867,6 @@
     let currentRangeLabel = "";
     const statsKey = "pm04QuizStats";
     const visitsKey = "pm04QuizVisits";
-    const visitDayKey = "pm04QuizVisitDay";
     const nickKey = "pm04QuizNick";
     let cachedStats = [];
     let cachedVisits = 0;
@@ -860,6 +894,7 @@
     }
 
     function openInfo() {
+        renderGlobalVisits();
         document.getElementById('info-modal').classList.add('active');
     }
 
@@ -911,17 +946,15 @@
     }
 
     async function recordVisit() {
-        const today = new Date().toISOString().slice(0, 10);
-        if (localStorage.getItem(visitDayKey) === today) return;
-
-        localStorage.setItem(visitDayKey, today);
         cachedVisits = getLocalVisits() + 1;
         localStorage.setItem(visitsKey, String(cachedVisits));
+        renderGlobalVisits();
 
         if (isOnlineLeaderboard && onlineDb) {
             try {
                 await onlineDb.collection('pm04Visits').add({
-                    day: today,
+                    day: new Date().toISOString().slice(0, 10),
+                    visitedAt: new Date().toISOString(),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch {
@@ -1000,9 +1033,9 @@
 
             onlineDb.collection('pm04Visits')
                 .orderBy('createdAt', 'desc')
-                .limit(1000)
                 .onSnapshot(snapshot => {
                     cachedVisits = snapshot.size;
+                    renderGlobalVisits();
                 });
 
             recordVisit();
@@ -1040,14 +1073,20 @@
         summary.innerHTML = `
             <div class="my-stats-title">Моя статистика</div>
             <div class="my-stats-item"><strong>${profile.attempts}</strong><span>тестов пройдено</span></div>
-            <div class="my-stats-item"><strong>${profile.totalCorrect}/${profile.totalQuestions}</strong><span>правильных всего</span></div>
             <div class="my-stats-item"><strong>${profile.bestPercentage}%</strong><span>лучший результат</span></div>
             <div class="my-stats-item"><strong>${profile.averagePercentage}%</strong><span>средний результат</span></div>
-            <div class="my-stats-item"><strong>${profile.totalHints}</strong><span>подсказок использовано</span></div>
-            <div class="my-stats-item"><strong>${profile.totalSkipped}</strong><span>вопросов пропущено</span></div>
-            <div class="my-stats-item"><strong>${formatTime(profile.totalTime)}</strong><span>времени всего</span></div>
+            <div class="my-stats-item"><strong>${profile.totalCorrect}/${profile.totalQuestions}</strong><span>правильных всего</span></div>
+            <div class="my-stats-item"><strong>${profile.totalHints}</strong><span>подсказок</span></div>
+            <div class="my-stats-item"><strong>${profile.totalSkipped}</strong><span>пропусков</span></div>
             <div class="my-stats-item"><strong>${formatTime(profile.averageTime)}</strong><span>среднее время</span></div>
+            <div class="my-stats-item"><strong>${formatTime(profile.totalTime)}</strong><span>времени всего</span></div>
         `;
+    }
+
+    function renderGlobalVisits() {
+        const visits = document.getElementById('global-visits-count');
+        if (!visits) return;
+        visits.innerText = String(cachedVisits || 0);
     }
 
     function getProfiles() {
