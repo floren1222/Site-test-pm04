@@ -6,55 +6,84 @@
     <title>Тестирование: ПМ 04</title>
     <style>
         :root {
-            --bg-color: #f5f5f7;
-            --card-bg: #ffffff;
-            --text-main: #1d1d1f;
-            --text-secondary: #86868b;
-            --accent: #0071e3;
-            --accent-hover: #0077ed;
-            --correct: #34c759;
-            --wrong: #ff3b30;
-            --hint-color: #ff9500;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.06);
-            --border-radius: 24px;
-            --select-bg: #f5f5f7;
+            --bg-color: #eef4ff;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --surface: #f8fbff;
+            --text-main: #172033;
+            --text-secondary: #68748a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-soft: rgba(37, 99, 235, 0.1);
+            --correct: #16a34a;
+            --wrong: #dc2626;
+            --hint-color: #d97706;
+            --line: rgba(96, 116, 148, 0.18);
+            --card-shadow: 0 24px 70px rgba(22, 37, 65, 0.16);
+            --border-radius: 26px;
+            --select-bg: rgba(248, 251, 255, 0.82);
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg-color: #000000;
-                --card-bg: #1c1c1e;
-                --text-main: #f5f5f7;
-                --text-secondary: #a1a1a6;
-                --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
-                --select-bg: #2c2c2e;
+                --bg-color: #07111f;
+                --card-bg: rgba(15, 23, 42, 0.9);
+                --surface: #101a2d;
+                --text-main: #f8fafc;
+                --text-secondary: #a7b3c7;
+                --accent: #60a5fa;
+                --accent-hover: #93c5fd;
+                --accent-soft: rgba(96, 165, 250, 0.14);
+                --line: rgba(203, 213, 225, 0.16);
+                --card-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+                --select-bg: rgba(30, 41, 59, 0.78);
             }
-            body { background-color: var(--bg-color); }
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            margin: 0; padding: 20px;
+            margin: 0;
+            padding: 24px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
+            background:
+                radial-gradient(circle at 12% 12%, rgba(37, 99, 235, 0.18), transparent 28%),
+                radial-gradient(circle at 88% 20%, rgba(20, 184, 166, 0.15), transparent 28%),
+                linear-gradient(135deg, var(--bg-color), #f7fbff 58%, #edf8f6);
             color: var(--text-main);
-            display: flex; justify-content: center; align-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
         }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background:
+                    radial-gradient(circle at 12% 12%, rgba(96, 165, 250, 0.16), transparent 28%),
+                    radial-gradient(circle at 88% 20%, rgba(45, 212, 191, 0.12), transparent 28%),
+                    linear-gradient(135deg, var(--bg-color), #0f172a 62%, #10201f);
+            }
+        }
+
         .container {
-            width: 100%; max-width: 480px;
+            width: 100%;
+            max-width: 520px;
             position: relative;
         }
+
         .card {
             background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.62);
             border-radius: var(--border-radius);
             box-shadow: var(--card-shadow);
-            padding: 32px 24px;
+            padding: 30px;
             display: none;
             flex-direction: column;
             gap: 20px;
+            backdrop-filter: blur(18px);
             animation: fadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
+
         .card.active { display: flex; }
 
         @keyframes fadeIn {
@@ -62,78 +91,487 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        h1 { margin: 0; font-weight: 700; text-align: center; font-size: 24px; letter-spacing: -0.5px; }
-        p.subtitle { color: var(--text-secondary); text-align: center; margin: 0; font-size: 15px; line-height: 1.5; }
+        .intro-top {
+            display: block;
+            padding-bottom: 2px;
+        }
 
-        /* Селектор диапазона */
-        .range-container { display: flex; flex-direction: column; gap: 10px; margin: 8px 0; }
+        .intro-copy {
+            flex: 1;
+            min-width: 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-weight: 800;
+            text-align: left;
+            font-size: 27px;
+            line-height: 1.15;
+            letter-spacing: 0;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            margin: 6px 0 0;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .mini-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .mini-stat {
+            min-height: 64px;
+            padding: 10px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--surface);
+        }
+
+        .mini-stat strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .mini-stat span {
+            display: block;
+            margin-top: 6px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.25;
+        }
+
+        .range-container { display: flex; flex-direction: column; gap: 10px; margin: 2px 0; }
+
         .range-option {
-            display: flex; align-items: center; background: var(--select-bg);
-            padding: 16px; border-radius: 16px; cursor: pointer;
-            transition: all 0.2s ease; border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--select-bg);
+            padding: 16px;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+            border: 1px solid var(--line);
         }
+
+        .range-option:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(22, 37, 65, 0.08); }
+
         .range-option input[type="radio"] {
-            appearance: none; -webkit-appearance: none;
-            width: 20px; height: 20px; border: 2px solid var(--text-secondary);
-            border-radius: 50%; margin-right: 14px; outline: none;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease; background: transparent;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #9aa8bd;
+            border-radius: 50%;
+            margin: 0;
+            outline: none;
+            display: grid;
+            place-items: center;
+            transition: all 0.2s ease;
+            background: transparent;
+            flex: 0 0 auto;
         }
+
         .range-option input[type="radio"]:checked {
-            border-color: var(--accent); background: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent);
         }
+
         .range-option input[type="radio"]:checked::before {
-            content: ""; width: 8px; height: 8px; background: #ffffff; border-radius: 50%;
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: #ffffff;
+            border-radius: 50%;
         }
+
         .range-option:has(input:checked) {
-            border-color: rgba(0, 113, 227, 0.3); background: rgba(0, 113, 227, 0.05);
+            border-color: rgba(37, 99, 235, 0.46);
+            background: var(--accent-soft);
         }
-        .range-label { font-size: 16px; font-weight: 600; }
 
-        /* Прогресс и кнопки */
-        .progress-bar { height: 6px; background: rgba(134, 134, 139, 0.2); border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
-        .question-text { font-size: 20px; font-weight: 600; line-height: 1.4; margin-bottom: 4px; text-align: center; }
-        
+        .range-label { font-size: 16px; font-weight: 700; line-height: 1.35; }
+
+        .name-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .name-field label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .name-field input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--surface);
+            color: var(--text-main);
+            padding: 15px 16px;
+            font: inherit;
+            font-size: 16px;
+            font-weight: 650;
+            outline: none;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .name-field input:focus {
+            border-color: rgba(37, 99, 235, 0.55);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .name-hint {
+            color: var(--wrong);
+            min-height: 17px;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .leaderboard {
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: var(--surface);
+            overflow: hidden;
+        }
+
+        .leaderboard-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .leaderboard-head h2 {
+            margin: 0;
+            font-size: 17px;
+            line-height: 1.2;
+        }
+
+        .leaderboard-reset {
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 4px 0;
+        }
+
+        .leaderboard-reset:hover { color: var(--accent); }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .leaderboard-row {
+            display: grid;
+            grid-template-columns: 28px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+            padding: 12px 16px;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            font: inherit;
+            text-align: left;
+            transition: background 0.16s ease;
+        }
+
+        .leaderboard-row:hover {
+            background: var(--accent-soft);
+        }
+
+        .leaderboard-row:last-child { border-bottom: 0; }
+
+        .leaderboard-rank {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .leaderboard-name {
+            min-width: 0;
+            font-size: 14px;
+            font-weight: 800;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .leaderboard-meta {
+            margin-top: 3px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .leaderboard-score {
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .leaderboard-empty {
+            padding: 16px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .info-start-row {
+            display: grid;
+            grid-template-columns: 52px 1fr;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .info-btn {
+            width: 52px;
+            min-height: 52px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--surface);
+            color: var(--accent);
+            font-size: 22px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .info-btn:hover { transform: translateY(-1px); border-color: rgba(37, 99, 235, 0.42); background: var(--accent-soft); }
+        .info-btn:active { transform: scale(0.97); }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(104, 116, 138, 0.18);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #14b8a6);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: var(--surface);
+            font-size: 20px;
+            font-weight: 750;
+            line-height: 1.42;
+            text-align: left;
+        }
+
         .options { display: flex; flex-direction: column; gap: 10px; }
+
         .option-btn {
-            background: rgba(134, 134, 139, 0.1); border: 2px solid transparent; border-radius: 16px;
-            padding: 16px 20px; font-size: 16px; font-family: inherit; color: var(--text-main);
-            text-align: left; cursor: pointer; transition: all 0.2s ease;
-            position: relative; font-weight: 500; line-height: 1.3;
-        }
-        .option-btn:hover:not(:disabled) { background: rgba(134, 134, 139, 0.15); }
-        .option-btn:active:not(:disabled) { transform: scale(0.98); }
-        
-        .option-btn.correct { background: rgba(52, 199, 89, 0.15); border-color: var(--correct); color: var(--correct); }
-        .option-btn.wrong { background: rgba(255, 59, 48, 0.15); border-color: var(--wrong); color: var(--wrong); }
-        
-        /* Стили для подсказки */
-        .option-btn.hidden-by-hint {
-            opacity: 0.3; pointer-events: none; transform: scale(0.95);
+            background: var(--select-bg);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px 18px;
+            font-size: 16px;
+            font-family: inherit;
+            color: var(--text-main);
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+            position: relative;
+            font-weight: 650;
+            line-height: 1.35;
         }
 
-        .actions-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 5px; }
-        
-        .primary-btn {
-            background: var(--accent); color: white; border: none; border-radius: 16px;
-            padding: 16px; font-size: 17px; font-weight: 600; cursor: pointer;
-            transition: background 0.2s ease, transform 0.1s ease; width: 100%; letter-spacing: -0.3px;
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            border-color: rgba(37, 99, 235, 0.34);
+            background: var(--surface);
+            box-shadow: 0 10px 22px rgba(22, 37, 65, 0.08);
         }
-        .primary-btn:hover { background: var(--accent-hover); }
-        .primary-btn:active { transform: scale(0.98); }
+
+        .option-btn:active:not(:disabled) { transform: scale(0.985); }
+        .option-btn.correct { background: rgba(22, 163, 74, 0.14); border-color: var(--correct); color: var(--correct); }
+        .option-btn.wrong { background: rgba(220, 38, 38, 0.12); border-color: var(--wrong); color: var(--wrong); }
+
+        .option-btn.hidden-by-hint {
+            opacity: 0.25;
+            pointer-events: none;
+            transform: scale(0.98);
+        }
+
+        .actions-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 2px; }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--accent), #14b8a6);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: filter 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            width: 100%;
+            letter-spacing: 0;
+            box-shadow: 0 14px 32px rgba(37, 99, 235, 0.24);
+        }
+
+        .primary-btn:hover { filter: brightness(1.04); box-shadow: 0 16px 36px rgba(37, 99, 235, 0.3); }
+        .primary-btn:active { transform: scale(0.985); }
+        .primary-btn:disabled {
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+            opacity: 0.55;
+            box-shadow: none;
+        }
 
         .hint-btn {
-            background: rgba(255, 149, 0, 0.15); color: var(--hint-color); border: none; border-radius: 16px;
-            padding: 12px 16px; font-size: 15px; font-weight: 600; cursor: pointer;
-            transition: all 0.2s ease; flex-shrink: 0;
+            background: rgba(217, 119, 6, 0.13);
+            color: var(--hint-color);
+            border: 1px solid rgba(217, 119, 6, 0.22);
+            border-radius: 16px;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
         }
-        .hint-btn:hover:not(:disabled) { background: rgba(255, 149, 0, 0.25); }
-        .hint-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .result-percent { font-size: 64px; font-weight: 800; color: var(--text-main); text-align: center; margin: 10px 0 0 0; letter-spacing: -2px;}
-        .result-score { font-size: 18px; font-weight: 600; color: var(--accent); text-align: center; margin: 0 0 10px 0; }
-        .stats { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+        .hint-btn:hover:not(:disabled) { background: rgba(217, 119, 6, 0.22); transform: translateY(-1px); }
+        .hint-btn:disabled { opacity: 0.42; cursor: not-allowed; }
+
+        .result-percent {
+            font-size: 68px;
+            font-weight: 900;
+            color: var(--text-main);
+            text-align: center;
+            margin: 4px 0 0;
+            letter-spacing: 0;
+        }
+
+        .result-score {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--accent);
+            text-align: center;
+            margin: 0 0 8px;
+        }
+
+        .result-screen-title { text-align: center; }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 750;
+        }
+
+        .stats span {
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            place-items: center;
+            padding: 20px;
+            background: rgba(8, 13, 24, 0.42);
+            backdrop-filter: blur(8px);
+            z-index: 20;
+        }
+
+        .modal-overlay.active { display: grid; }
+
+        .modal {
+            width: min(420px, 100%);
+            background: var(--card-bg);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            padding: 22px;
+            animation: fadeIn 0.22s ease forwards;
+        }
+
+        .modal h2 {
+            margin: 0 0 10px;
+            font-size: 22px;
+            line-height: 1.2;
+        }
+
+        .modal p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.55;
+        }
+
+        .modal-actions { margin-top: 18px; }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .profile-stat {
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--surface);
+            padding: 12px;
+        }
+
+        .profile-stat strong {
+            display: block;
+            font-size: 21px;
+            line-height: 1;
+        }
+
+        .profile-stat span {
+            display: block;
+            margin-top: 7px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 750;
+            line-height: 1.25;
+        }
+
+        @media (max-width: 520px) {
+            body { padding: 14px; align-items: flex-start; }
+            .card { padding: 22px; border-radius: 22px; gap: 16px; }
+            .intro-top { align-items: flex-start; }
+            h1 { font-size: 24px; }
+            .mini-stats { grid-template-columns: 1fr; }
+            .question-text { font-size: 18px; padding: 16px; }
+            .option-btn { padding: 15px; font-size: 15px; }
+            .stats { flex-direction: column; }
+            .profile-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -141,8 +579,27 @@
 <div class="container">
     <!-- ГЛАВНАЯ СТРАНИЦА -->
     <div id="intro-screen" class="card active">
-        <h1>Тестирование ПМ 04</h1>
-        <p class="subtitle">118 уникальных вопросов. Выберите диапазон:</p>
+        <div class="intro-top">
+            <div class="intro-copy">
+                <h1>Тестирование ПМ 04</h1>
+                <p class="subtitle">Тренировка по сетям и безопасности. Выберите удобный диапазон вопросов.</p>
+            </div>
+        </div>
+
+        <div class="mini-stats">
+            <div class="mini-stat">
+                <strong>118</strong>
+                <span>вопросов</span>
+            </div>
+            <div class="mini-stat">
+                <strong>50/50</strong>
+                <span>подсказка</span>
+            </div>
+            <div class="mini-stat">
+                <strong>3</strong>
+                <span>режима</span>
+            </div>
+        </div>
         
         <div class="range-container">
             <label class="range-option">
@@ -159,7 +616,26 @@
             </label>
         </div>
 
-        <button class="primary-btn" onclick="startQuiz()">Начать тест</button>
+        <div class="name-field">
+            <label for="player-name">Имя участника</label>
+            <input id="player-name" type="text" maxlength="24" placeholder="Например: Сикс севен" autocomplete="name">
+            <div class="name-hint" id="name-hint"></div>
+        </div>
+
+        <div class="leaderboard" aria-live="polite">
+            <div class="leaderboard-head">
+                <h2>Статистика участников</h2>
+                <button class="leaderboard-reset" type="button" onclick="clearStats()">Очистить</button>
+            </div>
+            <div class="leaderboard-list" id="leaderboard-list">
+                <div class="leaderboard-empty">Пока результатов нет. Пройдите тест, и здесь появится рейтинг.</div>
+            </div>
+        </div>
+
+        <div class="info-start-row">
+            <button class="info-btn" type="button" onclick="openInfo()" aria-label="Информация о сайте">!</button>
+            <button class="primary-btn" id="start-btn" onclick="startQuiz()" disabled>Начать тест</button>
+        </div>
     </div>
 
     <!-- ЭКРАН ТЕСТИРОВАНИЯ -->
@@ -179,12 +655,33 @@
 
     <!-- ЭКРАН РЕЗУЛЬТАТОВ -->
     <div id="result-screen" class="card">
-        <h1>Тест завершен</h1>
+        <h1 class="result-screen-title">Тест завершен</h1>
         <p class="subtitle">Ваш итоговый результат:</p>
         <div class="result-percent" id="final-percent">0%</div>
         <div class="result-score" id="final-score">0 из 0 правильных</div>
         <p class="subtitle" id="result-message"></p>
         <button class="primary-btn" onclick="backToIntro()">На главную</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="info-modal" onclick="closeInfo(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="info-title">
+        <h2 id="info-title">О сайте</h2>
+        <p>Сайт для подготовки к тестированию ПМ 04. Создано через ИИ и улучшено Floren.</p>
+        <div class="modal-actions">
+            <button class="primary-btn" type="button" onclick="closeInfo()">Понятно</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="profile-modal" onclick="closeProfile(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+        <h2 id="profile-title">Профиль</h2>
+        <p id="profile-subtitle">Статистика участника</p>
+        <div class="profile-grid" id="profile-grid"></div>
+        <div class="modal-actions">
+            <button class="primary-btn" type="button" onclick="closeProfile()">Закрыть</button>
+        </div>
     </div>
 </div>
 
@@ -197,6 +694,10 @@
     let score = 0;
     let isAnswering = false;
     let currentCorrectAnswer = "";
+    let currentPlayerName = "";
+    let currentRangeLabel = "";
+    const statsKey = "pm04QuizStats";
+    const nickKey = "pm04QuizNick";
 
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
@@ -213,8 +714,185 @@
         document.getElementById(screenId).classList.add('active');
     }
 
+    function openInfo() {
+        document.getElementById('info-modal').classList.add('active');
+    }
+
+    function closeInfo(event) {
+        if (event && !event.target.classList.contains('modal-overlay')) return;
+        document.getElementById('info-modal').classList.remove('active');
+    }
+
+    function closeProfile(event) {
+        if (event && !event.target.classList.contains('modal-overlay')) return;
+        document.getElementById('profile-modal').classList.remove('active');
+    }
+
+    function getStats() {
+        try {
+            return JSON.parse(localStorage.getItem(statsKey)) || [];
+        } catch {
+            return [];
+        }
+    }
+
+    function saveStats(result) {
+        const stats = getStats();
+        stats.push(result);
+        localStorage.setItem(statsKey, JSON.stringify(stats.slice(-200)));
+        renderStats();
+    }
+
+    function getProfiles() {
+        const profiles = new Map();
+
+        getStats().forEach(item => {
+            const key = normalizeName(item.name);
+            if (!key) return;
+
+            if (!profiles.has(key)) {
+                profiles.set(key, {
+                    name: item.name,
+                    attempts: 0,
+                    totalCorrect: 0,
+                    totalQuestions: 0,
+                    bestPercentage: 0,
+                    bestScore: 0,
+                    bestTotal: 0,
+                    lastDate: item.date || ""
+                });
+            }
+
+            const profile = profiles.get(key);
+            profile.name = item.name;
+            profile.attempts++;
+            profile.totalCorrect += Number(item.score) || 0;
+            profile.totalQuestions += Number(item.total) || 0;
+            profile.lastDate = item.date || profile.lastDate;
+
+            if ((Number(item.percentage) || 0) > profile.bestPercentage) {
+                profile.bestPercentage = Number(item.percentage) || 0;
+                profile.bestScore = Number(item.score) || 0;
+                profile.bestTotal = Number(item.total) || 0;
+            }
+        });
+
+        return Array.from(profiles.values())
+            .map(profile => ({
+                ...profile,
+                averagePercentage: profile.totalQuestions
+                    ? Math.round((profile.totalCorrect / profile.totalQuestions) * 100)
+                    : 0
+            }))
+            .sort((a, b) =>
+                b.bestPercentage - a.bestPercentage ||
+                b.averagePercentage - a.averagePercentage ||
+                b.attempts - a.attempts
+            );
+    }
+
+    function renderStats() {
+        const list = document.getElementById('leaderboard-list');
+        if (!list) return;
+
+        const profiles = getProfiles();
+        if (profiles.length === 0) {
+            list.innerHTML = '<div class="leaderboard-empty">Пока результатов нет. Введите ник, пройдите тест, и здесь появится лидерборд.</div>';
+            return;
+        }
+
+        list.innerHTML = profiles.slice(0, 8).map((profile, index) => `
+            <button class="leaderboard-row" type="button" onclick="openProfile('${encodeURIComponent(profile.name)}')">
+                <div class="leaderboard-rank">#${index + 1}</div>
+                <div>
+                    <div class="leaderboard-name">${escapeHtml(profile.name)}</div>
+                    <div class="leaderboard-meta">${profile.attempts} тест(ов) · всего ${profile.totalCorrect}/${profile.totalQuestions}</div>
+                </div>
+                <div class="leaderboard-score">${profile.bestPercentage}%</div>
+            </button>
+        `).join('');
+    }
+
+    function openProfile(encodedName) {
+        const name = decodeURIComponent(encodedName);
+        const profile = getProfiles().find(item => normalizeName(item.name) === normalizeName(name));
+        if (!profile) return;
+
+        document.getElementById('profile-title').innerText = profile.name;
+        document.getElementById('profile-subtitle').innerText = "Профиль из лидерборда";
+        document.getElementById('profile-grid').innerHTML = `
+            <div class="profile-stat">
+                <strong>${profile.attempts}</strong>
+                <span>тестов пройдено полностью</span>
+            </div>
+            <div class="profile-stat">
+                <strong>${profile.totalCorrect}/${profile.totalQuestions}</strong>
+                <span>правильных ответов всего</span>
+            </div>
+            <div class="profile-stat">
+                <strong>${profile.bestPercentage}%</strong>
+                <span>лучший результат</span>
+            </div>
+            <div class="profile-stat">
+                <strong>${profile.averagePercentage}%</strong>
+                <span>средний результат</span>
+            </div>
+        `;
+        document.getElementById('profile-modal').classList.add('active');
+    }
+
+    function clearStats() {
+        localStorage.removeItem(statsKey);
+        renderStats();
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function normalizeName(name) {
+        return String(name || "").trim().toLowerCase();
+    }
+
+    function syncNickState() {
+        const input = document.getElementById('player-name');
+        const startBtn = document.getElementById('start-btn');
+        const hint = document.getElementById('name-hint');
+        const name = input.value.trim();
+
+        startBtn.disabled = name.length === 0;
+        hint.innerText = name.length === 0 ? "Введите ник, чтобы начать тест." : "";
+
+        if (name.length > 0) {
+            localStorage.setItem(nickKey, name);
+        }
+    }
+
+    function initNick() {
+        const input = document.getElementById('player-name');
+        input.value = localStorage.getItem(nickKey) || "";
+        input.addEventListener('input', syncNickState);
+        syncNickState();
+    }
+
     function startQuiz() {
-        const rangeValue = document.querySelector('input[name="quiz-range"]:checked').value;
+        const rangeInput = document.querySelector('input[name="quiz-range"]:checked');
+        const rangeValue = rangeInput.value;
+        currentRangeLabel = rangeInput.closest('.range-option').querySelector('.range-label').innerText;
+        currentPlayerName = document.getElementById('player-name').value.trim();
+
+        if (!currentPlayerName) {
+            syncNickState();
+            document.getElementById('player-name').focus();
+            return;
+        }
+
+        localStorage.setItem(nickKey, currentPlayerName);
         
         if (rangeValue === '1-50') currentPool = allQuestions.slice(0, 50);
         else if (rangeValue === '51-118') currentPool = allQuestions.slice(50, 118);
@@ -236,7 +914,7 @@
         // Сброс кнопки подсказки
         const hintBtn = document.getElementById('hint-btn');
         hintBtn.disabled = false;
-        hintBtn.innerText = "💡 50/50";
+        hintBtn.innerText = "Подсказка 50/50";
         
         document.getElementById('question-counter').innerText = `Вопрос ${currentQIndex + 1} из ${currentPool.length}`;
         document.getElementById('score-counter').innerText = `Счет: ${score}`;
@@ -311,17 +989,29 @@
         document.getElementById('final-score').innerText = `Правильно: ${score} из ${currentPool.length}`;
         document.getElementById('progress').style.width = `100%`;
         
-        let msg = "Нужно еще потренироваться.";
-        if (percentage >= 90) msg = "Превосходно! Прекрасный результат.";
-        else if (percentage >= 70) msg = "Хороший результат, тест сдан!";
-        else if (percentage >= 50) msg = "Неплохо, но лучше повторить материал.";
+        let msg = "Материал лучше повторить и пройти тест еще раз.";
+        if (percentage >= 90) msg = "Отлично! Очень уверенный результат.";
+        else if (percentage >= 70) msg = "Хороший результат, тест можно считать пройденным.";
+        else if (percentage >= 50) msg = "Неплохо, но стоит еще немного потренироваться.";
         
         document.getElementById('result-message').innerText = msg;
+        saveStats({
+            name: currentPlayerName,
+            score,
+            total: currentPool.length,
+            percentage,
+            range: currentRangeLabel,
+            date: new Date().toLocaleDateString('ru-RU')
+        });
     }
 
     function backToIntro() {
         switchScreen('intro-screen');
+        renderStats();
     }
+
+    initNick();
+    renderStats();
 </script>
 </body>
 </html>
