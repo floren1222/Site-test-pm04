@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Тестирование: ПМ 04</title>
+    <title>Тестирование ПМ 03 / ПМ 04</title>
     <style>
         :root {
             --bg-color: #eef4ff;
             --card-bg: rgba(255, 255, 255, 0.9);
             --surface: #f8fbff;
+            --surface-strong: rgba(248, 251, 255, 0.92);
             --text-main: #172033;
             --text-secondary: #68748a;
             --accent: #2563eb;
@@ -28,6 +29,7 @@
                 --bg-color: #07111f;
                 --card-bg: rgba(15, 23, 42, 0.9);
                 --surface: #101a2d;
+                --surface-strong: rgba(16, 26, 45, 0.92);
                 --text-main: #f8fafc;
                 --text-secondary: #a7b3c7;
                 --accent: #60a5fa;
@@ -197,6 +199,24 @@
 
         .range-label { font-size: 16px; font-weight: 700; line-height: 1.35; }
 
+        .section-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin: 2px 0 -4px;
+        }
+
+        .module-picker {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            display: grid;
+        }
+
+        .module-picker .range-option {
+            align-items: flex-start;
+        }
+
         .name-field {
             display: flex;
             flex-direction: column;
@@ -237,8 +257,8 @@
 
         .leaderboard {
             border: 1px solid var(--line);
-            border-radius: 20px;
-            background: var(--surface);
+            border-radius: 8px;
+            background: var(--card-bg);
             overflow: hidden;
         }
 
@@ -247,8 +267,9 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            padding: 14px 16px;
+            padding: 13px 16px;
             border-bottom: 1px solid var(--line);
+            background: var(--surface-strong);
         }
 
         .leaderboard-head h2 {
@@ -262,9 +283,9 @@
             align-items: center;
             justify-content: center;
             min-height: 26px;
-            border-radius: 999px;
+            border-radius: 6px;
             padding: 5px 9px;
-            background: var(--accent-soft);
+            background: var(--card-bg);
             color: var(--accent);
             font-size: 11px;
             font-weight: 900;
@@ -280,13 +301,13 @@
             line-height: 1.35;
         }
 
-        .leaderboard-status.online { color: var(--correct); }
-        .leaderboard-status.offline { color: var(--hint-color); }
-        .leaderboard-status.error { color: var(--wrong); }
+        .leaderboard-status.online { color: var(--correct); background: rgba(21, 128, 61, 0.06); }
+        .leaderboard-status.offline { color: var(--hint-color); background: rgba(180, 83, 9, 0.06); }
+        .leaderboard-status.error { color: var(--wrong); background: rgba(185, 28, 28, 0.06); }
 
         .my-stats {
             border-bottom: 1px solid var(--line);
-            background: rgba(255, 255, 255, 0.18);
+            background: var(--card-bg);
         }
 
         .my-stats-toggle {
@@ -325,7 +346,7 @@
             height: 30px;
             display: grid;
             place-items: center;
-            border-radius: 999px;
+            border-radius: 6px;
             background: var(--accent-soft);
             color: var(--accent);
             font-size: 18px;
@@ -366,9 +387,9 @@
 
         .my-stats-item {
             border: 1px solid var(--line);
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 8px;
-            background: rgba(255, 255, 255, 0.34);
+            background: var(--surface);
             min-width: 0;
         }
 
@@ -408,11 +429,11 @@
 
         .leaderboard-row {
             display: grid;
-            grid-template-columns: 28px 1fr auto;
-            gap: 10px;
+            grid-template-columns: 38px minmax(0, 1fr) auto;
+            gap: 12px;
             align-items: center;
             width: 100%;
-            padding: 12px 16px;
+            padding: 13px 16px;
             border: 0;
             border-bottom: 1px solid var(--line);
             background: transparent;
@@ -423,21 +444,26 @@
             transition: background 0.16s ease;
         }
 
-        .leaderboard-row:hover {
-            background: var(--accent-soft);
-        }
+        .leaderboard-row:hover { background: var(--surface); }
 
         .leaderboard-row:last-child { border-bottom: 0; }
 
         .leaderboard-rank {
-            color: var(--text-secondary);
-            font-size: 13px;
+            color: var(--accent);
+            font-size: 12px;
             font-weight: 900;
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--surface);
         }
 
         .leaderboard-name {
             min-width: 0;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 800;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -452,10 +478,13 @@
         }
 
         .leaderboard-score {
-            color: var(--accent);
+            color: var(--text-main);
             font-size: 14px;
             font-weight: 900;
             white-space: nowrap;
+            padding: 6px 9px;
+            border-radius: 6px;
+            background: var(--accent-soft);
         }
 
         .leaderboard-empty {
@@ -476,7 +505,7 @@
             width: 52px;
             min-height: 52px;
             border: 1px solid var(--line);
-            border-radius: 16px;
+            border-radius: 8px;
             background: var(--surface);
             color: var(--accent);
             font-size: 22px;
@@ -485,7 +514,7 @@
             transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
         }
 
-        .info-btn:hover { transform: translateY(-1px); border-color: rgba(37, 99, 235, 0.42); background: var(--accent-soft); }
+        .info-btn:hover { border-color: rgba(15, 118, 110, 0.42); background: var(--accent-soft); }
         .info-btn:active { transform: scale(0.97); }
 
         .progress-bar {
@@ -497,7 +526,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent), #14b8a6);
+            background: var(--accent);
             width: 0%;
             transition: width 0.4s ease;
         }
@@ -505,7 +534,7 @@
         .question-text {
             padding: 18px;
             border: 1px solid var(--line);
-            border-radius: 20px;
+            border-radius: 8px;
             background: var(--surface);
             font-size: 20px;
             font-weight: 750;
@@ -518,21 +547,20 @@
         .option-btn {
             background: var(--select-bg);
             border: 1px solid var(--line);
-            border-radius: 18px;
+            border-radius: 8px;
             padding: 16px 18px;
             font-size: 16px;
             font-family: inherit;
             color: var(--text-main);
             text-align: left;
             cursor: pointer;
-            transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+            transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
             position: relative;
             font-weight: 650;
             line-height: 1.35;
         }
 
         .option-btn:hover:not(:disabled) {
-            transform: translateY(-1px);
             border-color: rgba(37, 99, 235, 0.34);
             background: var(--surface);
             box-shadow: 0 10px 22px rgba(22, 37, 65, 0.08);
@@ -561,10 +589,10 @@
         }
 
         .primary-btn {
-            background: linear-gradient(135deg, var(--accent), #14b8a6);
+            background: var(--accent);
             color: white;
             border: none;
-            border-radius: 16px;
+            border-radius: 8px;
             padding: 16px;
             font-size: 17px;
             font-weight: 800;
@@ -572,10 +600,10 @@
             transition: filter 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
             width: 100%;
             letter-spacing: 0;
-            box-shadow: 0 14px 32px rgba(37, 99, 235, 0.24);
+            box-shadow: 0 10px 22px rgba(15, 118, 110, 0.18);
         }
 
-        .primary-btn:hover { filter: brightness(1.04); box-shadow: 0 16px 36px rgba(37, 99, 235, 0.3); }
+        .primary-btn:hover { background: var(--accent-hover); box-shadow: 0 12px 24px rgba(15, 118, 110, 0.22); }
         .primary-btn:active { transform: scale(0.985); }
         .primary-btn:disabled {
             cursor: not-allowed;
@@ -588,7 +616,7 @@
             background: rgba(217, 119, 6, 0.13);
             color: var(--hint-color);
             border: 1px solid rgba(217, 119, 6, 0.22);
-            border-radius: 16px;
+            border-radius: 8px;
             padding: 12px 16px;
             font-size: 15px;
             font-weight: 800;
@@ -597,14 +625,14 @@
             flex-shrink: 0;
         }
 
-        .hint-btn:hover:not(:disabled) { background: rgba(217, 119, 6, 0.22); transform: translateY(-1px); }
+        .hint-btn:hover:not(:disabled) { background: rgba(217, 119, 6, 0.22); }
         .hint-btn:disabled { opacity: 0.42; cursor: not-allowed; }
 
         .secondary-btn {
             background: var(--surface);
             color: var(--text-main);
             border: 1px solid var(--line);
-            border-radius: 16px;
+            border-radius: 8px;
             padding: 12px 14px;
             font-size: 15px;
             font-weight: 800;
@@ -612,13 +640,13 @@
             transition: all 0.2s ease;
         }
 
-        .secondary-btn:hover { background: var(--accent-soft); transform: translateY(-1px); }
+        .secondary-btn:hover { background: var(--accent-soft); }
 
         .danger-btn {
             background: rgba(220, 38, 38, 0.1);
             color: var(--wrong);
             border: 1px solid rgba(220, 38, 38, 0.22);
-            border-radius: 16px;
+            border-radius: 8px;
             padding: 12px 14px;
             font-size: 15px;
             font-weight: 800;
@@ -626,7 +654,7 @@
             transition: all 0.2s ease;
         }
 
-        .danger-btn:hover { background: rgba(220, 38, 38, 0.16); transform: translateY(-1px); }
+        .danger-btn:hover { background: rgba(220, 38, 38, 0.16); }
 
         .result-percent {
             font-size: 68px;
@@ -658,7 +686,7 @@
 
         .stats span {
             padding: 8px 10px;
-            border-radius: 999px;
+            border-radius: 8px;
             background: var(--surface);
             border: 1px solid var(--line);
         }
@@ -683,7 +711,7 @@
             overscroll-behavior: contain;
             background: var(--card-bg);
             border: 1px solid var(--line);
-            border-radius: 24px;
+            border-radius: 8px;
             box-shadow: var(--card-shadow);
             padding: 22px;
             animation: fadeIn 0.22s ease forwards;
@@ -750,7 +778,7 @@
             margin-top: 16px;
             padding: 12px;
             border: 1px solid var(--line);
-            border-radius: 16px;
+            border-radius: 8px;
             background: var(--surface);
         }
 
@@ -774,7 +802,7 @@
 
         .profile-stat {
             border: 1px solid var(--line);
-            border-radius: 14px;
+            border-radius: 8px;
             background: var(--surface);
             padding: 10px;
             min-width: 0;
@@ -811,17 +839,32 @@
             font-size: 26px;
         }
 
-        @media (max-width: 520px) {
-            body { padding: 14px; align-items: flex-start; }
-            .card { padding: 22px; border-radius: 22px; gap: 16px; }
+        @media (max-width: 640px) {
+            body { padding: 10px; align-items: flex-start; }
+            .container { max-width: 100%; }
+            .card { padding: 16px; border-radius: 8px; gap: 14px; box-shadow: none; }
             .intro-top { align-items: flex-start; }
-            h1 { font-size: 24px; }
-            .mini-stats { grid-template-columns: 1fr; }
-            .question-text { font-size: 18px; padding: 16px; }
-            .option-btn { padding: 15px; font-size: 15px; }
+            h1 { font-size: 23px; }
+            p.subtitle { font-size: 14px; }
+            .mini-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+            .mini-stat { min-height: 58px; padding: 9px; }
+            .mini-stat strong { font-size: 17px; }
+            .mini-stat span { font-size: 10px; }
+            .module-picker { grid-template-columns: 1fr; }
+            .range-option { padding: 12px; }
+            .leaderboard-head { align-items: flex-start; flex-direction: column; gap: 8px; }
+            .leaderboard-row { grid-template-columns: 32px minmax(0, 1fr) auto; gap: 8px; padding: 11px 12px; }
+            .leaderboard-rank { width: 26px; height: 26px; font-size: 11px; }
+            .leaderboard-name { font-size: 14px; }
+            .leaderboard-meta { font-size: 11px; }
+            .leaderboard-score { font-size: 13px; padding: 5px 7px; }
+            .my-stats-toggle { padding: 11px 12px; }
+            .my-stats-content { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 0 12px 12px; }
+            .question-text { font-size: 17px; padding: 14px; }
+            .option-btn { padding: 13px; font-size: 15px; }
             .stats { flex-direction: column; }
             .modal-overlay { padding: 10px; align-items: start; overflow-y: auto; }
-            .modal { max-height: calc(100vh - 20px); border-radius: 20px; padding: 18px; }
+            .modal { max-height: calc(100vh - 20px); border-radius: 8px; padding: 16px; }
             .profile-modal { padding: 0; max-height: calc(100dvh - 20px); }
             .profile-header { padding: 16px 16px 10px; }
             .profile-body { padding: 10px; }
@@ -831,7 +874,17 @@
             .profile-stat strong { font-size: 17px; }
             .profile-stat.featured strong { font-size: 24px; }
             .actions-row { grid-template-columns: 1fr; }
-            .my-stats-content { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .info-start-row { grid-template-columns: 48px 1fr; }
+            .info-btn { width: 48px; min-height: 48px; }
+        }
+
+        @media (max-width: 380px) {
+            body { padding: 8px; }
+            .card { padding: 12px; }
+            h1 { font-size: 21px; }
+            .mini-stats { grid-template-columns: 1fr; }
+            .leaderboard-row { grid-template-columns: 30px minmax(0, 1fr); }
+            .leaderboard-score { grid-column: 2; justify-self: start; }
         }
     </style>
 </head>
@@ -842,14 +895,14 @@
     <div id="intro-screen" class="card active">
         <div class="intro-top">
             <div class="intro-copy">
-                <h1>Тестирование ПМ 04</h1>
-                <p class="subtitle">Тренировка по сетям и безопасности. Выберите удобный диапазон вопросов.</p>
+                <h1 id="intro-title">Тестирование ПМ 03</h1>
+                <p class="subtitle" id="intro-subtitle">Модуль 3.1/3.2: мобильные приложения, Android и интерфейсы.</p>
             </div>
         </div>
 
         <div class="mini-stats">
             <div class="mini-stat">
-                <strong>118</strong>
+                <strong id="question-total">151</strong>
                 <span>вопросов</span>
             </div>
             <div class="mini-stat">
@@ -857,25 +910,25 @@
                 <span>подсказка</span>
             </div>
             <div class="mini-stat">
-                <strong>3</strong>
+                <strong id="range-total">4</strong>
                 <span>режима</span>
             </div>
         </div>
         
-        <div class="range-container">
+        <div class="section-label">Модуль</div>
+        <div class="range-container module-picker">
             <label class="range-option">
-                <input type="radio" name="quiz-range" value="1-50" checked>
-                <span class="range-label">Первые 50 вопросов (1–50)</span>
+                <input type="radio" name="quiz-module" value="pm03" checked>
+                <span class="range-label">3.1/3.2 - ПМ 03</span>
             </label>
             <label class="range-option">
-                <input type="radio" name="quiz-range" value="51-118">
-                <span class="range-label">Оставшиеся 68 (51–118)</span>
-            </label>
-            <label class="range-option">
-                <input type="radio" name="quiz-range" value="all">
-                <span class="range-label">Все 118 вопросов сразу</span>
+                <input type="radio" name="quiz-module" value="pm04">
+                <span class="range-label">4.1 - ПМ 04</span>
             </label>
         </div>
+
+        <div class="section-label">Диапазон</div>
+        <div class="range-container" id="range-container"></div>
 
         <div class="name-field">
             <label for="player-name">Регистрация по нику</label>
@@ -982,8 +1035,40 @@
         measurementId: "G-M2YKM8BRRL"
     };
 
-    // 118 уникальных вопросов (без повторов)
-    const allQuestions = [{"question": "Как расшифровывается LAN?", "options": ["Local Area Network", "Long Area Network", "Light Access Network", "Linked Access Network"], "correct": "Local Area Network"}, {"question": "Что характеризует LAN-сеть?", "options": ["Ограничена одним зданием или помещением", "Используется только в военной сфере", "Работает по всему миру", "Используется только в спутниковой связи"], "correct": "Ограничена одним зданием или помещением"}, {"question": "Что означает WAN?", "options": ["Wide Area Network", "Wide Access Network", "Wireless Area Network", "Web Area Network"], "correct": "Wide Area Network"}, {"question": "Какой из типов сетей самый крупномасштабный?", "options": ["WAN", "MAN", "PAN", "LAN"], "correct": "WAN"}, {"question": "Что такое MAN-сеть?", "options": ["Сеть в пределах города", "Сеть внутри одного офиса", "Сеть между странами", "Сеть между двумя компьютерами"], "correct": "Сеть в пределах города"}, {"question": "Какая сеть соединяет устройства в пределах одной комнаты?", "options": ["PAN", "WAN", "MAN", "LAN"], "correct": "PAN"}, {"question": "Что означает PAN?", "options": ["Personal Area Network", "Private Access Network", "Public Area Network", "Personal Access Node"], "correct": "Personal Area Network"}, {"question": "Примером LAN-сети может быть:", "options": ["Сеть в пределах школы", "Глобальный интернет", "Связь между странами", "Связь между городами"], "correct": "Сеть в пределах школы"}, {"question": "Какая сеть соединяет несколько LAN-сетей в одном городе?", "options": ["MAN", "PAN", "WAN", "GAN"], "correct": "MAN"}, {"question": "Что означает GAN?", "options": ["Global Area Network", "General Access Network", "Government Area Network", "Graphical Access Network"], "correct": "Global Area Network"}, {"question": "Что характеризует WAN-сеть?", "options": ["Объединяет множество LAN и MAN-сетей", "Работает в радиусе 10 метров", "Используется только в домашних условиях", "Используется только на военных объектах"], "correct": "Объединяет множество LAN и MAN-сетей"}, {"question": "Примером WAN может быть:", "options": ["Интернет", "Bluetooth", "Сеть в квартире", "Локальная сеть офиса"], "correct": "Интернет"}, {"question": "Какая сеть чаще всего используется для подключения смартфона к наушникам?", "options": ["PAN", "MAN", "LAN", "WAN"], "correct": "PAN"}, {"question": "Что из перечисленного – характеристика LAN?", "options": ["Высокая скорость передачи данных", "Большое покрытие", "Высокая задержка сигнала", "Поддержка спутниковой связи"], "correct": "Высокая скорость передачи данных"}, {"question": "Какой тип сети предполагает личное использование на коротком расстоянии?", "options": ["PAN", "LAN", "MAN", "WAN"], "correct": "PAN"}, {"question": "Сеть, охватывающая несколько стран, – это:", "options": ["WAN", "MAN", "PAN", "LAN"], "correct": "WAN"}, {"question": "Какой тип сети используют в кампусах университетов?", "options": ["MAN", "LAN", "PAN", "GAN"], "correct": "MAN"}, {"question": "Что характерно для MAN-сетей?", "options": ["Использование в пределах одного города", "Медленная передача данных", "Только спутниковая передача", "Использование радиоволн"], "correct": "Использование в пределах одного города"}, {"question": "Какая из сетей наименьшая по масштабу?", "options": ["PAN", "WAN", "MAN", "LAN"], "correct": "PAN"}, {"question": "Где чаще всего используется PAN?", "options": ["Внутри одного устройства", "Между странами", "В школьной сети", "В городской телефонной сети"], "correct": "Внутри одного устройства"}, {"question": "В каком типе сети чаще всего используется Wi-Fi дома?", "options": ["LAN", "WAN", "MAN", "PAN"], "correct": "LAN"}, {"question": "Что объединяет разные сети в одну глобальную структуру?", "options": ["WAN", "Локальная сеть", "Маршрутизаторы", "Личный компьютер"], "correct": "WAN"}, {"question": "Какой тип сети использует Bluetooth?", "options": ["PAN", "WAN", "LAN", "MAN"], "correct": "PAN"}, {"question": "Сеть предприятия в одном здании – это:", "options": ["LAN", "PAN", "WAN", "MAN"], "correct": "LAN"}, {"question": "Примером MAN-сети может быть:", "options": ["Bluetooth-наушники", "Интернет", "Городская сеть видеонаблюдения", "Wi-Fi дома"], "correct": "Bluetooth-наушники"}, {"question": "Какой тип сети предназначен для объединения рабочих станций в офисе?", "options": ["Корпоративная сеть", "Домашняя сеть", "Персональная сеть", "Публичная сеть"], "correct": "Корпоративная сеть"}, {"question": "Что такое корпоративная сеть?", "options": ["Сеть, предназначенная для организации", "Сеть в пределах одного компьютера", "Сеть между странами", "Сеть между друзьями"], "correct": "Сеть, предназначенная для организации"}, {"question": "Домашняя сеть – это:", "options": ["Сеть, объединяющая устройства в доме", "Сеть, соединяющая офисы", "Глобальная сеть", "Сеть в учебном заведении"], "correct": "Сеть, объединяющая устройства в доме"}, {"question": "Какая сеть предназначена для частного использования на близком расстоянии?", "options": ["PAN", "WAN", "MAN", "VPN"], "correct": "PAN"}, {"question": "Публичные сети доступны:", "options": ["Всем пользователям без ограничений", "Только через VPN", "Только по паролю", "Только администраторам"], "correct": "Всем пользователям без ограничений"}, {"question": "Что такое VPN?", "options": ["Виртуальная частная сеть", "Глобальная сеть", "Локальная сеть", "Офисная сеть"], "correct": "Виртуальная частная сеть"}, {"question": "Основное назначение VPN:", "options": ["Обеспечение безопасности и конфиденциальности", "Ускорение интернета", "Передача музыки", "Улучшение качества видео"], "correct": "Обеспечение безопасности и конфиденциальности"}, {"question": "Какая сеть используется для объединения учебных заведений?", "options": ["Образовательная", "Домашняя", "Коммерческая", "Публичная"], "correct": "Образовательная"}, {"question": "Коммерческая сеть предназначена для:", "options": ["Предоставления платных услуг", "Развлечений", "Игры", "Учёбы"], "correct": "Предоставления платных услуг"}, {"question": "Примером публичной сети является:", "options": ["Интернет в кафе", "VPN", "Домашняя Wi-Fi сеть", "Сеть в офисе"], "correct": "Интернет в кафе"}, {"question": "Сеть предприятия называется:", "options": ["Корпоративная сеть", "Общественная сеть", "Городская сеть", "Персональная сеть"], "correct": "Корпоративная сеть"}, {"question": "Сеть для передачи данных внутри одной организации:", "options": ["Корпоративная", "Домашняя", "Глобальная", "Персональная"], "correct": "Корпоративная"}, {"question": "Какая сеть чаще всего используется в гостиницах для гостей?", "options": ["Публичная", "Виртуальная", "Персональная", "Секретная"], "correct": "Публичная"}, {"question": "Какая сеть предоставляет интернет в торговом центре?", "options": ["Публичная", "Частная", "Виртуальная", "Коммерческая"], "correct": "Публичная"}, {"question": "Что характеризует персональную сеть?", "options": ["Используется одним человеком", "Используется несколькими организациями", "Используется в городе", "Используется в стране"], "correct": "Используется одним человеком"}, {"question": "Какая сеть предоставляет доступ к интернету дома?", "options": ["Домашняя", "Корпоративная", "Образовательная", "Публичная"], "correct": "Домашняя"}, {"question": "VPN используется для:", "options": ["Сокрытия IP-адреса", "Повышения сигнала", "Просмотра фильмов", "Подключения к Wi-Fi"], "correct": "Сокрытия IP-адреса"}, {"question": "Какая сеть объединяет компьютеры одной фирмы?", "options": ["Корпоративная", "Публичная", "Персональная", "Домашняя"], "correct": "Корпоративная"}, {"question": "Что обеспечивает безопасность в корпоративной сети?", "options": ["Политика безопасности и контроль доступа", "Пароль Wi-Fi", "Открытый доступ", "Быстрый интернет"], "correct": "Политика безопасности и контроль доступа"}, {"question": "Какая сеть больше подходит для удалённой работы?", "options": ["VPN", "Домашняя", "Публичная", "Образовательная"], "correct": "VPN"}, {"question": "Сеть между филиалами компании – это:", "options": ["Корпоративная", "Персональная", "PAN", "Глобальная"], "correct": "Корпоративная"}, {"question": "Где чаще всего используют образовательную сеть?", "options": ["В школах и вузах", "В магазинах", "В офисах", "В метро"], "correct": "В школах и вузах"}, {"question": "Сеть для работы одного пользователя – это:", "options": ["Персональная", "Публичная", "Домашняя", "Корпоративная"], "correct": "Персональная"}, {"question": "VPN обеспечивает:", "options": ["Анонимность и безопасность", "Прямое подключение к интернету", "Быструю загрузку игр", "Ускорение Wi-Fi"], "correct": "Анонимность и безопасность"}, {"question": "Интернет в аэропорту – это:", "options": ["Публичная сеть", "Персональная сеть", "Корпоративная сеть", "Домашняя сеть"], "correct": "Публичная сеть"}, {"question": "Что является основным устройством для соединения компьютеров в сети?", "options": ["Маршрутизатор", "Принтер", "Монитор", "Клавиатура"], "correct": "Маршрутизатор"}, {"question": "Какой компонент используется для соединения кабелей в сети?", "options": ["Коммутатор", "Мышь", "Процессор", "Память"], "correct": "Коммутатор"}, {"question": "Что такое сетевая карта?", "options": ["Устройство для подключения к сети", "Программа для игр", "Монитор", "Модем"], "correct": "Устройство для подключения к сети"}, {"question": "Основной функцией маршрутизатора является:", "options": ["Направление трафика между сетями", "Хранение данных", "Отображение видео", "Увеличение объема памяти"], "correct": "Направление трафика между сетями"}, {"question": "Коммутатор предназначен для:", "options": ["Соединения устройств в локальной сети", "Печати документов", "Подключения к интернету", "Управления питанием ПК"], "correct": "Соединения устройств в локальной сети"}, {"question": "Что такое сервер?", "options": ["Центральный узел для предоставления ресурсов", "Устройство хранения данных", "Компьютер для игр", "Принтер"], "correct": "Центральный узел для предоставления ресурсов"}, {"question": "Модем служит для:", "options": ["Соединения локальной сети с интернетом", "Увеличения громкости", "Управления сетью", "Вывода изображения"], "correct": "Соединения локальной сети с интернетом"}, {"question": "Клиент в компьютерной сети – это:", "options": ["Пользовательское устройство", "Центральный сервер", "Печатающее устройство", "Операционная система"], "correct": "Пользовательское устройство"}, {"question": "Что передает данные по сети?", "options": ["Кабель", "Сканер", "Видеокарта", "Колонки"], "correct": "Кабель"}, {"question": "Какое устройство чаще всего подключается к модему?", "options": ["Маршрутизатор", "Клавиатура", "Принтер", "Монитор"], "correct": "Маршрутизатор"}, {"question": "Какой компонент используется для управления доступом к ресурсам?", "options": ["Сервер", "Клиент", "Коммутатор", "Кабель"], "correct": "Сервер"}, {"question": "Что обеспечивает физическое соединение между компьютерами?", "options": ["Кабель", "Программа", "Вентилятор", "Блок питания"], "correct": "Кабель"}, {"question": "Какой компонент работает на уровне сетевого трафика?", "options": ["Сетевая карта", "Оперативная память", "Процессор", "Жесткий диск"], "correct": "Сетевая карта"}, {"question": "Что выполняет функцию маршрутизации данных между сетями?", "options": ["Маршрутизатор", "Сканер", "Коммутатор", "Принтер"], "correct": "Маршрутизатор"}, {"question": "Для чего используется сетевой протокол?", "options": ["Для передачи данных по сети", "Для подключения клавиатуры", "Для загрузки видео", "Для копирования файлов на флешку"], "correct": "Для передачи данных по сети"}, {"question": "DHCP-сервер предназначен для:", "options": ["Автоматической выдачи IP-адресов", "Печати документов", "Ручной настройки IP", "Хранения видеофайлов"], "correct": "Автоматической выдачи IP-адресов"}, {"question": "DNS-сервер переводит:", "options": ["Имена сайтов в IP-адреса", "IP-адреса в MAC-адреса", "Пароли в логины", "Данные в звук"], "correct": "Имена сайтов в IP-адреса"}, {"question": "Что является примером сетевого оборудования?", "options": ["Коммутатор", "Проектор", "Флешка", "Колонки"], "correct": "Коммутатор"}, {"question": "Что делает точка доступа Wi-Fi?", "options": ["Обеспечивает беспроводное подключение", "Увеличивает память", "Передаёт звук", "Заряжает устройства"], "correct": "Обеспечивает беспроводное подключение"}, {"question": "MAC-адрес относится к:", "options": ["Аппаратному адресу сетевого устройства", "IP-настройкам", "Месту хранения паролей", "Списку сайтов"], "correct": "Аппаратному адресу сетевого устройства"}, {"question": "Что необходимо для подключения к сети интернет?", "options": ["Модем и провайдер", "Клавиатура и мышь", "Принтер и монитор", "Сканер и проектор"], "correct": "Модем и провайдер"}, {"question": "К какому типу устройств относится маршрутизатор?", "options": ["Сетевое", "Выходное", "Вводное", "Запоминающее"], "correct": "Сетевое"}, {"question": "Какой стандарт обозначает беспроводные сети Wi-Fi?", "options": ["IEEE 802.11", "IEEE 802.3", "IEEE 802.5", "IEEE 1394"], "correct": "IEEE 802.11"}, {"question": "Какой стандарт используется для Ethernet?", "options": ["IEEE 802.3", "IEEE 802.11", "IEEE 802.15", "IEEE 802.1X"], "correct": "IEEE 802.3"}, {"question": "Какой протокол обеспечивает передачу IP-адресов?", "options": ["DHCP", "DNS", "FTP", "HTTP"], "correct": "DHCP"}, {"question": "Какой протокол используется для передачи веб-страниц?", "options": ["HTTP", "SMTP", "FTP", "SSH"], "correct": "HTTP"}, {"question": "Протокол HTTPS отличается от HTTP тем, что:", "options": ["Обеспечивает шифрование", "Использует другой порт", "Не используется в браузерах", "Работает только в Linux"], "correct": "Обеспечивает шифрование"}, {"question": "Какой протокол используется для передачи файлов?", "options": ["FTP", "DNS", "POP3", "IMAP"], "correct": "FTP"}, {"question": "Что означает аббревиатура TCP/IP?", "options": ["Transmission Control Protocol / Internet Protocol", "Transfer Call Protocol / Integrated Protocol", "Text Control Protocol / Internet Protocol", "Total Communication Protocol / Internet Protocol"], "correct": "Transmission Control Protocol / Internet Protocol"}, {"question": "Какой уровень модели OSI отвечает за установку соединения?", "options": ["Сеансовый", "Транспортный", "Сетевой", "Канальный"], "correct": "Сеансовый"}, {"question": "Какая технология используется в локальных сетях Ethernet?", "options": ["CSMA/CD", "FDDI", "Token Ring", "ARPANET"], "correct": "CSMA/CD"}, {"question": "Стандарт IEEE 802.15 применяется для:", "options": ["Персональных беспроводных сетей", "Глобальных сетей", "Локальных сетей", "Кабельного телевидения"], "correct": "Персональных беспроводных сетей"}, {"question": "Какой протокол обеспечивает безопасность соединений через интернет?", "options": ["SSH", "FTP", "Telnet", "SNMP"], "correct": "SSH"}, {"question": "Какой протокол используется для удаленного управления устройствами?", "options": ["SNMP", "DHCP", "HTTP", "POP3"], "correct": "SNMP"}, {"question": "Какой протокол переводит доменные имена в IP-адреса?", "options": ["DNS", "FTP", "DHCP", "SMTP"], "correct": "DNS"}, {"question": "Что такое IPv6?", "options": ["Новый стандарт IP-адресов", "Версия TCP", "Протокол электронной почты", "Программа для шифрования"], "correct": "Новый стандарт IP-адресов"}, {"question": "Какая длина IP-адреса в IPv4?", "options": ["32 бита", "64 бита", "128 бит", "16 бит"], "correct": "32 бита"}, {"question": "Какой порт по умолчанию используется для HTTPS?", "options": ["443", "21", "20", "80"], "correct": "443"}, {"question": "Какой протокол используется для отправки электронной почты?", "options": ["SMTP", "POP3", "IMAP", "HTTP"], "correct": "SMTP"}, {"question": "Что такое NAT в компьютерных сетях?", "options": ["Механизм трансляции сетевых адресов", "Протокол почты", "Программа для чата", "Стандарт беспроводной связи"], "correct": "Механизм трансляции сетевых адресов"}, {"question": "Какая технология обеспечивает виртуальные частные сети?", "options": ["VPN", "VLAN", "WAN", "PAN"], "correct": "VPN"}, {"question": "Что такое VLAN?", "options": ["Виртуальная локальная сеть", "Протокол шифрования", "Программа управления", "Устройство хранения данных"], "correct": "Виртуальная локальная сеть"}, {"question": "Что делает протокол ARP?", "options": ["Сопоставляет IP и MAC-адреса", "Передает видео", "Управляет электронной почтой", "Отвечает за роуминг"], "correct": "Сопоставляет IP и MAC-адреса"}, {"question": "Какой протокол используется для безопасного удаленного доступа?", "options": ["SSH", "Telnet", "FTP", "POP3"], "correct": "SSH"}, {"question": "Какой протокол используется для получения почты по IMAP?", "options": ["IMAP", "SMTP", "HTTP", "FTP"], "correct": "IMAP"}, {"question": "Что обеспечивает протокол SSL?", "options": ["Защищенное соединение", "Сжатие данных", "Управление сетью", "Передачу видео"], "correct": "Защищенное соединение"}, {"question": "Что такое шифрование?", "options": ["Преобразование информации в недоступную форму", "Защита от вирусов", "Хранение данных в облаке", "Удаление данных"], "correct": "Преобразование информации в недоступную форму"}, {"question": "Какой алгоритм симметричного шифрования наиболее распространён?", "options": ["AES", "RSA", "SHA", "ECC"], "correct": "AES"}, {"question": "В чём основное отличие симметричного и асимметричного шифрования?", "options": ["В симметричном один ключ, в асимметричном — два", "Симметричное медленнее", "Используются разные типы данных", "Асимметричное не требует ключей"], "correct": "В симметричном один ключ, в асимметричном — два"}, {"question": "Какой алгоритм используется для асимметричного шифрования?", "options": ["RSA", "DES", "AES", "SHA-256"], "correct": "RSA"}, {"question": "Что такое открытый ключ?", "options": ["Ключ, доступный всем для шифрования", "Ключ, известный только получателю", "Пароль для входа", "Метод аутентификации"], "correct": "Ключ, доступный всем для шифрования"}, {"question": "Для чего используется хэш-функция?", "options": ["Для создания уникального отпечатка данных", "Для восстановления данных", "Для шифрования текста", "Для замены антивируса"], "correct": "Для создания уникального отпечатка данных"}, {"question": "Как называется метод шифрования, при котором каждый символ заменяется другим по определённому правилу?", "options": ["Шифр Цезаря", "RSA", "Хэширование", "DES"], "correct": "Шифр Цезаря"}, {"question": "Что происходит при дешифровке?", "options": ["Данные возвращаются в исходный вид", "Данные сжимаются", "Данные удаляются", "Данные маскируются"], "correct": "Данные возвращаются в исходный вид"}, {"question": "Что означает термин «отказоустойчивость» в сетевых технологиях?", "options": ["Способность системы продолжать работу при сбоях", "Защита от вирусов", "Быстрая передача данных", "Удалённое подключение"], "correct": "Способность системы продолжать работу при сбоях"}, {"question": "Что такое резервирование сетевого соединения?", "options": ["Наличие дополнительного канала на случай отказа основного", "Подключение к Wi-Fi", "Создание логина для подключения", "Снижение скорости интернета"], "correct": "Наличие дополнительного канала на случай отказа основного"}, {"question": "Какой из методов повышает отказоустойчивость сети?", "options": ["Установка резервного маршрутизатора", "Сжатие данных", "Использование общего пароля", "Подключение через VPN"], "correct": "Установка резервного маршрутизатора"}, {"question": "Что такое кластеризация в отказоустойчивых системах?", "options": ["Объединение серверов для обеспечения непрерывной работы", "Разделение сети по зонам", "Сбор данных с нескольких ПК", "Использование одного сервера без резервов"], "correct": "Объединение серверов для обеспечения непрерывной работы"}, {"question": "Какой элемент обеспечивает автоматическое переключение на резервный канал при отказе основного?", "options": ["Балансировщик нагрузки (load balancer)", "Фаервол", "Коммутатор", "Клиент VPN"], "correct": "Балансировщик нагрузки (load balancer)"}, {"question": "Что такое отказ одного компонента без остановки всей системы?", "options": ["Частичный отказ (graceful degradation)", "Атака на сеть", "Поломка сервера", "Резервное копирование"], "correct": "Частичный отказ (graceful degradation)"}, {"question": "Какая топология сети считается наиболее отказоустойчивой?", "options": ["Сетка (mesh)", "Звезда", "Шина", "Кольцо"], "correct": "Сетка (mesh)"}, {"question": "Зачем нужно резервное копирование в сетевой инфраструктуре?", "options": ["Для восстановления данных при сбоях", "Для ускорения соединения", "Для создания паролей", "Для установки драйверов"], "correct": "Для восстановления данных при сбоях"}, {"question": "Что такое аутентификация?", "options": ["Проверка подлинности пользователя", "Сканирование системы", "Назначение прав доступа", "Архивация данных"], "correct": "Проверка подлинности пользователя"}, {"question": "Что такое авторизация?", "options": ["Предоставление прав доступа пользователю", "Установка операционной системы", "Проверка наличия интернета", "Шифрование данных"], "correct": "Предоставление прав доступа пользователю"}, {"question": "Какой из следующих примеров относится к аутентификации?", "options": ["Ввод логина и пароля", "Выдача прав администратора", "Получение доступа к файлу", "Установка антивируса"], "correct": "Ввод логина и пароля"}, {"question": "Что такое двухфакторная аутентификация (2FA)?", "options": ["Использование пароля и дополнительного кода", "Использование двух пользователей", "Проверка сетевого подключения", "Подключение через VPN"], "correct": "Использование пароля и дополнительного кода"}, {"question": "Что используется для авторизации пользователей в системе?", "options": ["Список разрешений и ролей", "IP-адрес", "Уровень сигнала Wi-Fi", "Тип браузера"], "correct": "Список разрешений и ролей"}, {"question": "Какой из следующих методов усиливает безопасность при аутентификации?", "options": ["Биометрические данные (отпечаток пальца, лицо)", "Использование одного устройства", "Простые пароли", "Сохранение пароля в браузере"], "correct": "Биометрические данные (отпечаток пальца, лицо)"}, {"question": "Что происходит, если пользователь прошёл аутентификацию, но не авторизован?", "options": ["Доступ ограничен или запрещён", "Получает полный доступ", "Удаляется из базы данных", "Система выключается"], "correct": "Доступ ограничен или запрещён"}, {"question": "Что такое идентификация в контексте информационной безопасности?", "options": ["Процесс распознавания пользователя перед аутентификацией", "Шифрование данных", "Создание резервной копии", "Установка обновлений"], "correct": "Процесс распознавания пользователя перед аутентификацией"}];
+    // Вопросы модуля 4.1
+    const pm04Questions = [{"question": "Как расшифровывается LAN?", "options": ["Local Area Network", "Long Area Network", "Light Access Network", "Linked Access Network"], "correct": "Local Area Network"}, {"question": "Что характеризует LAN-сеть?", "options": ["Ограничена одним зданием или помещением", "Используется только в военной сфере", "Работает по всему миру", "Используется только в спутниковой связи"], "correct": "Ограничена одним зданием или помещением"}, {"question": "Что означает WAN?", "options": ["Wide Area Network", "Wide Access Network", "Wireless Area Network", "Web Area Network"], "correct": "Wide Area Network"}, {"question": "Какой из типов сетей самый крупномасштабный?", "options": ["WAN", "MAN", "PAN", "LAN"], "correct": "WAN"}, {"question": "Что такое MAN-сеть?", "options": ["Сеть в пределах города", "Сеть внутри одного офиса", "Сеть между странами", "Сеть между двумя компьютерами"], "correct": "Сеть в пределах города"}, {"question": "Какая сеть соединяет устройства в пределах одной комнаты?", "options": ["PAN", "WAN", "MAN", "LAN"], "correct": "PAN"}, {"question": "Что означает PAN?", "options": ["Personal Area Network", "Private Access Network", "Public Area Network", "Personal Access Node"], "correct": "Personal Area Network"}, {"question": "Примером LAN-сети может быть:", "options": ["Сеть в пределах школы", "Глобальный интернет", "Связь между странами", "Связь между городами"], "correct": "Сеть в пределах школы"}, {"question": "Какая сеть соединяет несколько LAN-сетей в одном городе?", "options": ["MAN", "PAN", "WAN", "GAN"], "correct": "MAN"}, {"question": "Что означает GAN?", "options": ["Global Area Network", "General Access Network", "Government Area Network", "Graphical Access Network"], "correct": "Global Area Network"}, {"question": "Что характеризует WAN-сеть?", "options": ["Объединяет множество LAN и MAN-сетей", "Работает в радиусе 10 метров", "Используется только в домашних условиях", "Используется только на военных объектах"], "correct": "Объединяет множество LAN и MAN-сетей"}, {"question": "Примером WAN может быть:", "options": ["Интернет", "Bluetooth", "Сеть в квартире", "Локальная сеть офиса"], "correct": "Интернет"}, {"question": "Какая сеть чаще всего используется для подключения смартфона к наушникам?", "options": ["PAN", "MAN", "LAN", "WAN"], "correct": "PAN"}, {"question": "Что из перечисленного – характеристика LAN?", "options": ["Высокая скорость передачи данных", "Большое покрытие", "Высокая задержка сигнала", "Поддержка спутниковой связи"], "correct": "Высокая скорость передачи данных"}, {"question": "Какой тип сети предполагает личное использование на коротком расстоянии?", "options": ["PAN", "LAN", "MAN", "WAN"], "correct": "PAN"}, {"question": "Сеть, охватывающая несколько стран, – это:", "options": ["WAN", "MAN", "PAN", "LAN"], "correct": "WAN"}, {"question": "Какой тип сети используют в кампусах университетов?", "options": ["MAN", "LAN", "PAN", "GAN"], "correct": "MAN"}, {"question": "Что характерно для MAN-сетей?", "options": ["Использование в пределах одного города", "Медленная передача данных", "Только спутниковая передача", "Использование радиоволн"], "correct": "Использование в пределах одного города"}, {"question": "Какая из сетей наименьшая по масштабу?", "options": ["PAN", "WAN", "MAN", "LAN"], "correct": "PAN"}, {"question": "Где чаще всего используется PAN?", "options": ["Внутри одного устройства", "Между странами", "В школьной сети", "В городской телефонной сети"], "correct": "Внутри одного устройства"}, {"question": "В каком типе сети чаще всего используется Wi-Fi дома?", "options": ["LAN", "WAN", "MAN", "PAN"], "correct": "LAN"}, {"question": "Что объединяет разные сети в одну глобальную структуру?", "options": ["WAN", "Локальная сеть", "Маршрутизаторы", "Личный компьютер"], "correct": "WAN"}, {"question": "Какой тип сети использует Bluetooth?", "options": ["PAN", "WAN", "LAN", "MAN"], "correct": "PAN"}, {"question": "Сеть предприятия в одном здании – это:", "options": ["LAN", "PAN", "WAN", "MAN"], "correct": "LAN"}, {"question": "Примером MAN-сети может быть:", "options": ["Bluetooth-наушники", "Интернет", "Городская сеть видеонаблюдения", "Wi-Fi дома"], "correct": "Bluetooth-наушники"}, {"question": "Какой тип сети предназначен для объединения рабочих станций в офисе?", "options": ["Корпоративная сеть", "Домашняя сеть", "Персональная сеть", "Публичная сеть"], "correct": "Корпоративная сеть"}, {"question": "Что такое корпоративная сеть?", "options": ["Сеть, предназначенная для организации", "Сеть в пределах одного компьютера", "Сеть между странами", "Сеть между друзьями"], "correct": "Сеть, предназначенная для организации"}, {"question": "Домашняя сеть – это:", "options": ["Сеть, объединяющая устройства в доме", "Сеть, соединяющая офисы", "Глобальная сеть", "Сеть в учебном заведении"], "correct": "Сеть, объединяющая устройства в доме"}, {"question": "Какая сеть предназначена для частного использования на близком расстоянии?", "options": ["PAN", "WAN", "MAN", "VPN"], "correct": "PAN"}, {"question": "Публичные сети доступны:", "options": ["Всем пользователям без ограничений", "Только через VPN", "Только по паролю", "Только администраторам"], "correct": "Всем пользователям без ограничений"}, {"question": "Что такое VPN?", "options": ["Виртуальная частная сеть", "Глобальная сеть", "Локальная сеть", "Офисная сеть"], "correct": "Виртуальная частная сеть"}, {"question": "Основное назначение VPN:", "options": ["Обеспечение безопасности и конфиденциальности", "Ускорение интернета", "Передача музыки", "Улучшение качества видео"], "correct": "Обеспечение безопасности и конфиденциальности"}, {"question": "Какая сеть используется для объединения учебных заведений?", "options": ["Образовательная", "Домашняя", "Коммерческая", "Публичная"], "correct": "Образовательная"}, {"question": "Коммерческая сеть предназначена для:", "options": ["Предоставления платных услуг", "Развлечений", "Игры", "Учёбы"], "correct": "Предоставления платных услуг"}, {"question": "Примером публичной сети является:", "options": ["Интернет в кафе", "VPN", "Домашняя Wi-Fi сеть", "Сеть в офисе"], "correct": "Интернет в кафе"}, {"question": "Сеть предприятия называется:", "options": ["Корпоративная сеть", "Общественная сеть", "Городская сеть", "Персональная сеть"], "correct": "Корпоративная сеть"}, {"question": "Сеть для передачи данных внутри одной организации:", "options": ["Корпоративная", "Домашняя", "Глобальная", "Персональная"], "correct": "Корпоративная"}, {"question": "Какая сеть чаще всего используется в гостиницах для гостей?", "options": ["Публичная", "Виртуальная", "Персональная", "Секретная"], "correct": "Публичная"}, {"question": "Какая сеть предоставляет интернет в торговом центре?", "options": ["Публичная", "Частная", "Виртуальная", "Коммерческая"], "correct": "Публичная"}, {"question": "Что характеризует персональную сеть?", "options": ["Используется одним человеком", "Используется несколькими организациями", "Используется в городе", "Используется в стране"], "correct": "Используется одним человеком"}, {"question": "Какая сеть предоставляет доступ к интернету дома?", "options": ["Домашняя", "Корпоративная", "Образовательная", "Публичная"], "correct": "Домашняя"}, {"question": "VPN используется для:", "options": ["Сокрытия IP-адреса", "Повышения сигнала", "Просмотра фильмов", "Подключения к Wi-Fi"], "correct": "Сокрытия IP-адреса"}, {"question": "Какая сеть объединяет компьютеры одной фирмы?", "options": ["Корпоративная", "Публичная", "Персональная", "Домашняя"], "correct": "Корпоративная"}, {"question": "Что обеспечивает безопасность в корпоративной сети?", "options": ["Политика безопасности и контроль доступа", "Пароль Wi-Fi", "Открытый доступ", "Быстрый интернет"], "correct": "Политика безопасности и контроль доступа"}, {"question": "Какая сеть больше подходит для удалённой работы?", "options": ["VPN", "Домашняя", "Публичная", "Образовательная"], "correct": "VPN"}, {"question": "Сеть между филиалами компании – это:", "options": ["Корпоративная", "Персональная", "PAN", "Глобальная"], "correct": "Корпоративная"}, {"question": "Где чаще всего используют образовательную сеть?", "options": ["В школах и вузах", "В магазинах", "В офисах", "В метро"], "correct": "В школах и вузах"}, {"question": "Сеть для работы одного пользователя – это:", "options": ["Персональная", "Публичная", "Домашняя", "Корпоративная"], "correct": "Персональная"}, {"question": "VPN обеспечивает:", "options": ["Анонимность и безопасность", "Прямое подключение к интернету", "Быструю загрузку игр", "Ускорение Wi-Fi"], "correct": "Анонимность и безопасность"}, {"question": "Интернет в аэропорту – это:", "options": ["Публичная сеть", "Персональная сеть", "Корпоративная сеть", "Домашняя сеть"], "correct": "Публичная сеть"}, {"question": "Что является основным устройством для соединения компьютеров в сети?", "options": ["Маршрутизатор", "Принтер", "Монитор", "Клавиатура"], "correct": "Маршрутизатор"}, {"question": "Какой компонент используется для соединения кабелей в сети?", "options": ["Коммутатор", "Мышь", "Процессор", "Память"], "correct": "Коммутатор"}, {"question": "Что такое сетевая карта?", "options": ["Устройство для подключения к сети", "Программа для игр", "Монитор", "Модем"], "correct": "Устройство для подключения к сети"}, {"question": "Основной функцией маршрутизатора является:", "options": ["Направление трафика между сетями", "Хранение данных", "Отображение видео", "Увеличение объема памяти"], "correct": "Направление трафика между сетями"}, {"question": "Коммутатор предназначен для:", "options": ["Соединения устройств в локальной сети", "Печати документов", "Подключения к интернету", "Управления питанием ПК"], "correct": "Соединения устройств в локальной сети"}, {"question": "Что такое сервер?", "options": ["Центральный узел для предоставления ресурсов", "Устройство хранения данных", "Компьютер для игр", "Принтер"], "correct": "Центральный узел для предоставления ресурсов"}, {"question": "Модем служит для:", "options": ["Соединения локальной сети с интернетом", "Увеличения громкости", "Управления сетью", "Вывода изображения"], "correct": "Соединения локальной сети с интернетом"}, {"question": "Клиент в компьютерной сети – это:", "options": ["Пользовательское устройство", "Центральный сервер", "Печатающее устройство", "Операционная система"], "correct": "Пользовательское устройство"}, {"question": "Что передает данные по сети?", "options": ["Кабель", "Сканер", "Видеокарта", "Колонки"], "correct": "Кабель"}, {"question": "Какое устройство чаще всего подключается к модему?", "options": ["Маршрутизатор", "Клавиатура", "Принтер", "Монитор"], "correct": "Маршрутизатор"}, {"question": "Какой компонент используется для управления доступом к ресурсам?", "options": ["Сервер", "Клиент", "Коммутатор", "Кабель"], "correct": "Сервер"}, {"question": "Что обеспечивает физическое соединение между компьютерами?", "options": ["Кабель", "Программа", "Вентилятор", "Блок питания"], "correct": "Кабель"}, {"question": "Какой компонент работает на уровне сетевого трафика?", "options": ["Сетевая карта", "Оперативная память", "Процессор", "Жесткий диск"], "correct": "Сетевая карта"}, {"question": "Что выполняет функцию маршрутизации данных между сетями?", "options": ["Маршрутизатор", "Сканер", "Коммутатор", "Принтер"], "correct": "Маршрутизатор"}, {"question": "Для чего используется сетевой протокол?", "options": ["Для передачи данных по сети", "Для подключения клавиатуры", "Для загрузки видео", "Для копирования файлов на флешку"], "correct": "Для передачи данных по сети"}, {"question": "DHCP-сервер предназначен для:", "options": ["Автоматической выдачи IP-адресов", "Печати документов", "Ручной настройки IP", "Хранения видеофайлов"], "correct": "Автоматической выдачи IP-адресов"}, {"question": "DNS-сервер переводит:", "options": ["Имена сайтов в IP-адреса", "IP-адреса в MAC-адреса", "Пароли в логины", "Данные в звук"], "correct": "Имена сайтов в IP-адреса"}, {"question": "Что является примером сетевого оборудования?", "options": ["Коммутатор", "Проектор", "Флешка", "Колонки"], "correct": "Коммутатор"}, {"question": "Что делает точка доступа Wi-Fi?", "options": ["Обеспечивает беспроводное подключение", "Увеличивает память", "Передаёт звук", "Заряжает устройства"], "correct": "Обеспечивает беспроводное подключение"}, {"question": "MAC-адрес относится к:", "options": ["Аппаратному адресу сетевого устройства", "IP-настройкам", "Месту хранения паролей", "Списку сайтов"], "correct": "Аппаратному адресу сетевого устройства"}, {"question": "Что необходимо для подключения к сети интернет?", "options": ["Модем и провайдер", "Клавиатура и мышь", "Принтер и монитор", "Сканер и проектор"], "correct": "Модем и провайдер"}, {"question": "К какому типу устройств относится маршрутизатор?", "options": ["Сетевое", "Выходное", "Вводное", "Запоминающее"], "correct": "Сетевое"}, {"question": "Какой стандарт обозначает беспроводные сети Wi-Fi?", "options": ["IEEE 802.11", "IEEE 802.3", "IEEE 802.5", "IEEE 1394"], "correct": "IEEE 802.11"}, {"question": "Какой стандарт используется для Ethernet?", "options": ["IEEE 802.3", "IEEE 802.11", "IEEE 802.15", "IEEE 802.1X"], "correct": "IEEE 802.3"}, {"question": "Какой протокол обеспечивает передачу IP-адресов?", "options": ["DHCP", "DNS", "FTP", "HTTP"], "correct": "DHCP"}, {"question": "Какой протокол используется для передачи веб-страниц?", "options": ["HTTP", "SMTP", "FTP", "SSH"], "correct": "HTTP"}, {"question": "Протокол HTTPS отличается от HTTP тем, что:", "options": ["Обеспечивает шифрование", "Использует другой порт", "Не используется в браузерах", "Работает только в Linux"], "correct": "Обеспечивает шифрование"}, {"question": "Какой протокол используется для передачи файлов?", "options": ["FTP", "DNS", "POP3", "IMAP"], "correct": "FTP"}, {"question": "Что означает аббревиатура TCP/IP?", "options": ["Transmission Control Protocol / Internet Protocol", "Transfer Call Protocol / Integrated Protocol", "Text Control Protocol / Internet Protocol", "Total Communication Protocol / Internet Protocol"], "correct": "Transmission Control Protocol / Internet Protocol"}, {"question": "Какой уровень модели OSI отвечает за установку соединения?", "options": ["Сеансовый", "Транспортный", "Сетевой", "Канальный"], "correct": "Сеансовый"}, {"question": "Какая технология используется в локальных сетях Ethernet?", "options": ["CSMA/CD", "FDDI", "Token Ring", "ARPANET"], "correct": "CSMA/CD"}, {"question": "Стандарт IEEE 802.15 применяется для:", "options": ["Персональных беспроводных сетей", "Глобальных сетей", "Локальных сетей", "Кабельного телевидения"], "correct": "Персональных беспроводных сетей"}, {"question": "Какой протокол обеспечивает безопасность соединений через интернет?", "options": ["SSH", "FTP", "Telnet", "SNMP"], "correct": "SSH"}, {"question": "Какой протокол используется для удаленного управления устройствами?", "options": ["SNMP", "DHCP", "HTTP", "POP3"], "correct": "SNMP"}, {"question": "Какой протокол переводит доменные имена в IP-адреса?", "options": ["DNS", "FTP", "DHCP", "SMTP"], "correct": "DNS"}, {"question": "Что такое IPv6?", "options": ["Новый стандарт IP-адресов", "Версия TCP", "Протокол электронной почты", "Программа для шифрования"], "correct": "Новый стандарт IP-адресов"}, {"question": "Какая длина IP-адреса в IPv4?", "options": ["32 бита", "64 бита", "128 бит", "16 бит"], "correct": "32 бита"}, {"question": "Какой порт по умолчанию используется для HTTPS?", "options": ["443", "21", "20", "80"], "correct": "443"}, {"question": "Какой протокол используется для отправки электронной почты?", "options": ["SMTP", "POP3", "IMAP", "HTTP"], "correct": "SMTP"}, {"question": "Что такое NAT в компьютерных сетях?", "options": ["Механизм трансляции сетевых адресов", "Протокол почты", "Программа для чата", "Стандарт беспроводной связи"], "correct": "Механизм трансляции сетевых адресов"}, {"question": "Какая технология обеспечивает виртуальные частные сети?", "options": ["VPN", "VLAN", "WAN", "PAN"], "correct": "VPN"}, {"question": "Что такое VLAN?", "options": ["Виртуальная локальная сеть", "Протокол шифрования", "Программа управления", "Устройство хранения данных"], "correct": "Виртуальная локальная сеть"}, {"question": "Что делает протокол ARP?", "options": ["Сопоставляет IP и MAC-адреса", "Передает видео", "Управляет электронной почтой", "Отвечает за роуминг"], "correct": "Сопоставляет IP и MAC-адреса"}, {"question": "Какой протокол используется для безопасного удаленного доступа?", "options": ["SSH", "Telnet", "FTP", "POP3"], "correct": "SSH"}, {"question": "Какой протокол используется для получения почты по IMAP?", "options": ["IMAP", "SMTP", "HTTP", "FTP"], "correct": "IMAP"}, {"question": "Что обеспечивает протокол SSL?", "options": ["Защищенное соединение", "Сжатие данных", "Управление сетью", "Передачу видео"], "correct": "Защищенное соединение"}, {"question": "Что такое шифрование?", "options": ["Преобразование информации в недоступную форму", "Защита от вирусов", "Хранение данных в облаке", "Удаление данных"], "correct": "Преобразование информации в недоступную форму"}, {"question": "Какой алгоритм симметричного шифрования наиболее распространён?", "options": ["AES", "RSA", "SHA", "ECC"], "correct": "AES"}, {"question": "В чём основное отличие симметричного и асимметричного шифрования?", "options": ["В симметричном один ключ, в асимметричном — два", "Симметричное медленнее", "Используются разные типы данных", "Асимметричное не требует ключей"], "correct": "В симметричном один ключ, в асимметричном — два"}, {"question": "Какой алгоритм используется для асимметричного шифрования?", "options": ["RSA", "DES", "AES", "SHA-256"], "correct": "RSA"}, {"question": "Что такое открытый ключ?", "options": ["Ключ, доступный всем для шифрования", "Ключ, известный только получателю", "Пароль для входа", "Метод аутентификации"], "correct": "Ключ, доступный всем для шифрования"}, {"question": "Для чего используется хэш-функция?", "options": ["Для создания уникального отпечатка данных", "Для восстановления данных", "Для шифрования текста", "Для замены антивируса"], "correct": "Для создания уникального отпечатка данных"}, {"question": "Как называется метод шифрования, при котором каждый символ заменяется другим по определённому правилу?", "options": ["Шифр Цезаря", "RSA", "Хэширование", "DES"], "correct": "Шифр Цезаря"}, {"question": "Что происходит при дешифровке?", "options": ["Данные возвращаются в исходный вид", "Данные сжимаются", "Данные удаляются", "Данные маскируются"], "correct": "Данные возвращаются в исходный вид"}, {"question": "Что означает термин «отказоустойчивость» в сетевых технологиях?", "options": ["Способность системы продолжать работу при сбоях", "Защита от вирусов", "Быстрая передача данных", "Удалённое подключение"], "correct": "Способность системы продолжать работу при сбоях"}, {"question": "Что такое резервирование сетевого соединения?", "options": ["Наличие дополнительного канала на случай отказа основного", "Подключение к Wi-Fi", "Создание логина для подключения", "Снижение скорости интернета"], "correct": "Наличие дополнительного канала на случай отказа основного"}, {"question": "Какой из методов повышает отказоустойчивость сети?", "options": ["Установка резервного маршрутизатора", "Сжатие данных", "Использование общего пароля", "Подключение через VPN"], "correct": "Установка резервного маршрутизатора"}, {"question": "Что такое кластеризация в отказоустойчивых системах?", "options": ["Объединение серверов для обеспечения непрерывной работы", "Разделение сети по зонам", "Сбор данных с нескольких ПК", "Использование одного сервера без резервов"], "correct": "Объединение серверов для обеспечения непрерывной работы"}, {"question": "Какой элемент обеспечивает автоматическое переключение на резервный канал при отказе основного?", "options": ["Балансировщик нагрузки (load balancer)", "Фаервол", "Коммутатор", "Клиент VPN"], "correct": "Балансировщик нагрузки (load balancer)"}, {"question": "Что такое отказ одного компонента без остановки всей системы?", "options": ["Частичный отказ (graceful degradation)", "Атака на сеть", "Поломка сервера", "Резервное копирование"], "correct": "Частичный отказ (graceful degradation)"}, {"question": "Какая топология сети считается наиболее отказоустойчивой?", "options": ["Сетка (mesh)", "Звезда", "Шина", "Кольцо"], "correct": "Сетка (mesh)"}, {"question": "Зачем нужно резервное копирование в сетевой инфраструктуре?", "options": ["Для восстановления данных при сбоях", "Для ускорения соединения", "Для создания паролей", "Для установки драйверов"], "correct": "Для восстановления данных при сбоях"}, {"question": "Что такое аутентификация?", "options": ["Проверка подлинности пользователя", "Сканирование системы", "Назначение прав доступа", "Архивация данных"], "correct": "Проверка подлинности пользователя"}, {"question": "Что такое авторизация?", "options": ["Предоставление прав доступа пользователю", "Установка операционной системы", "Проверка наличия интернета", "Шифрование данных"], "correct": "Предоставление прав доступа пользователю"}, {"question": "Какой из следующих примеров относится к аутентификации?", "options": ["Ввод логина и пароля", "Выдача прав администратора", "Получение доступа к файлу", "Установка антивируса"], "correct": "Ввод логина и пароля"}, {"question": "Что такое двухфакторная аутентификация (2FA)?", "options": ["Использование пароля и дополнительного кода", "Использование двух пользователей", "Проверка сетевого подключения", "Подключение через VPN"], "correct": "Использование пароля и дополнительного кода"}, {"question": "Что используется для авторизации пользователей в системе?", "options": ["Список разрешений и ролей", "IP-адрес", "Уровень сигнала Wi-Fi", "Тип браузера"], "correct": "Список разрешений и ролей"}, {"question": "Какой из следующих методов усиливает безопасность при аутентификации?", "options": ["Биометрические данные (отпечаток пальца, лицо)", "Использование одного устройства", "Простые пароли", "Сохранение пароля в браузере"], "correct": "Биометрические данные (отпечаток пальца, лицо)"}, {"question": "Что происходит, если пользователь прошёл аутентификацию, но не авторизован?", "options": ["Доступ ограничен или запрещён", "Получает полный доступ", "Удаляется из базы данных", "Система выключается"], "correct": "Доступ ограничен или запрещён"}, {"question": "Что такое идентификация в контексте информационной безопасности?", "options": ["Процесс распознавания пользователя перед аутентификацией", "Шифрование данных", "Создание резервной копии", "Установка обновлений"], "correct": "Процесс распознавания пользователя перед аутентификацией"}];
+
+    const pm03Questions = [{"question":"Какие виды мобильных приложений вы знаете","options":["Веб-приложения, собственные приложения, гибридные приложения","Экспериментальные приложения, мобильные приложения","Мобильные устройства, универсальные устройства","Аксессуары, ресиверы","Страницы Google или Amazon"],"correct":"Веб-приложения, собственные приложения, гибридные приложения"},{"question":"Что можно установить с помощью мобильного устройства","options":["Коммуникация","Устройство","Кабельное соединение","Wi-Fi","Компьютер"],"correct":"Коммуникация"},{"question":"Что такое мобильное приложение","options":["Это программа, разработанная для планшетов и смартфонов, установленных на определенной платформе и обладающих определенным функционалом.","Язык программирования","Приложения MS Office","Виртуальная машина","Периферийные устройства для персональных компьютеров"],"correct":"Это программа, разработанная для планшетов и смартфонов, установленных на определенной платформе и обладающих определенным функционалом."},{"question":"Мобильные устройства должны иметь:","options":["Должны быть доступны размеры экрана, объем памяти, возможности процессора, графические интерфейсы, кнопки и сенсорные функции.","Должен быть системный блок","Аксессуаром должна быть мышь.","Должен быть дополнительный дисплей","Должна быть специальная доска, на которую можно установить устройство."],"correct":"Должны быть доступны размеры экрана, объем памяти, возможности процессора, графические интерфейсы, кнопки и сенсорные функции."},{"question":"Тестирование мобильных приложений — это…","options":["Обычно это не что иное, как тестирование встроенной программы.","Тест для приложения","Язык программирования, проверяющий приложение.","Название компании","Разработка проверочного теста для приложения."],"correct":"Обычно это не что иное, как тестирование встроенной программы."},{"question":"Первый планшет впервые был выпущен компанией Samsungв…","options":["1989 г.","1991 г.","1995 г.","2000 г.","1992 г."],"correct":"1989 г."},{"question":"Каковы основные особенности мобильных устройств","options":["Небольшой размер и количество функций","Согласно графическим параметрам","По цветам","В зависимости от объема кэш-памяти","В зависимости от объема"],"correct":"Небольшой размер и количество функций"},{"question":"Самая важная особенность смартфонов — это…","options":["Размер, портативность и множество функций.","В зависимости от объема кэш-памяти","По цветам","Работает без Интернета","Большой объем"],"correct":"Размер, портативность и множество функций."},{"question":"Что такое Android","options":["Операционная система","Язык программирования","Смартфон","Таблетка","Гаджет"],"correct":"Операционная система"},{"question":"На чем основана операционная система Android","options":["Linux","Google","СистемаWindows","Макос","iOS"],"correct":"Linux"},{"question":"Набор средств программирования, включающий в себя инструменты, необходимые для создания, отладки и компиляции мобильного приложения, называется:","options":["Android SDK","JDK","плагин ADT","AndroidNDK","3D-библиотеки"],"correct":"Android SDK"},{"question":"Какова цель системного анализатора Intel* GraphicsPerformanceAnalyzers (Intel* GPA) в среде разработки Intel* BeaconMountain","options":["Чтобы позволить разработчикам оптимизировать рабочую нагрузку системы при использовании подпрограмм OpenGL.","Для ускорения работы эмулятора в среде разработки","Для оптимизации обработки данных и изображений","Предоставление разработчикам возможности эффективно распараллеливать мобильные приложения на C++.","Для оптимизированной обработки данных и изображений"],"correct":"Чтобы позволить разработчикам оптимизировать рабочую нагрузку системы при использовании подпрограмм OpenGL."},{"question":"Библиотеки, реализованные на базе PacketvideoOpenkore:","options":["Media Framework","SQLite","FreeType","3Dбиблиотека","InnoDB"],"correct":"Media Framework"},{"question":"Какая база данных используется в ОС Android","options":["SQLite","InnoDB","DBM","MyISAM","FreeType"],"correct":"SQLite"},{"question":"Каковацельинструмента Intel* Integrated Performance Primitives (Intel* IPP) в средеразработки Intel* Beacon Mountain","options":["Для оптимизации обработки данных и изображений","Разрешить разработчикам оптимизировать рабочую нагрузку системы при использовании подпрограмм OpenGL.","Для ускорения работы эмулятора в среде разработки","Предоставление разработчикам возможности эффективно распараллеливать мобильные приложения на C++.","Выполнять свои функции, пока они видны на экране и скрыты другими приложениями."],"correct":"Для оптимизации обработки данных и изображений"},{"question":"Какие разработки поддерживает Intel XDK:","options":["Android, Apple iOS, Microsoft Windows 8, Tizen","Apple iOS","BlackBerry OS","Mtk OS, Symbian OS, Microsoft Windows 8","JavaFXMobile"],"correct":"Android, Apple iOS, Microsoft Windows 8, Tizen"},{"question":"Каждый класс приемника вещания наследуется от…","options":["Broadcast Receiver","Content Provider","View Receiver","Intent Receiver","GUI"],"correct":"Broadcast Receiver"},{"question":"Какой класс является основным строительным блоком компонентов пользовательского интерфейса (UI), определяет прямоугольную область экрана и отвечает за отрисовку и обработку событий","options":["View","GUI","UIComponent","Widget","IntentReceiver"],"correct":"View"},{"question":"Какой обработчик используется для отслеживания событий касания экрана устройства","options":["OnTouchListener","OnPressListener","OnClickListener","OnInputListener","UIComponent"],"correct":"OnTouchListener"},{"question":"В какой папке следует поместить XML-файлы, определяющие все меню программы","options":["res/menu","res/layout","res/items","res/value","res/component"],"correct":"res/menu"},{"question":"Фоновые приложения…","options":["После установки они не требуют взаимодействия с пользователем и часто скрываются и запускаются.","Выполняют свои функции, пока они видны на экране и скрыты другими приложениями.","Небольшие программы, отображаемые в виде графического объекта на рабочем столе.","Большую часть времени работает в фоновом режиме, но позволяет взаимодействовать с пользователем и позже.","Создание класса Heir из класса ContentProvider; определение способа организации данных; заполнение поставщика контента данными"],"correct":"После установки они не требуют взаимодействия с пользователем и часто скрываются и запускаются."},{"question":"Полный иерархический список необходимых файлов и папок проекта можно увидеть во вкладке...","options":["Package Explorer","Internet Explorer","Навигатор","Project Explorer","Activity"],"correct":"Package Explorer"},{"question":"Какой компонент управляет распределенным набором данных приложения","options":["Поставщикконтента(Content Provider)","Сервис(Service)","Деятельность(Activity)","Широковещательный приемник ((BroadcastReceiver))","Navigator"],"correct":"Поставщикконтента(Content Provider)"},{"question":"Какой язык разметки используется для описания иерархии компонентов графического интерфейса приложения Android","options":["xml","html","gml","xhtml","xtml"],"correct":"xml"},{"question":"Выберите правильную последовательность действий для выполнения в программе Контент-провайдера.","options":["Разработка метода хранения данных; Создание класса Inheritor из класса ContentProvider; определить путь авторизации поставщика, пути URI и имена столбцов","Создание класса Inheritor из класса ContentProvider; определение способа организации данных; наполнение контент-провайдера данными;","Разработка подхода к хранению данных; определение способа организации данных;","Создание класса Inheritor из класса ContentProvider; заполнение поставщика контента данными; определить способ работы с данными","Используется для отправки сообщений пользователю"],"correct":"Разработка метода хранения данных; Создание класса Inheritor из класса ContentProvider; определить путь авторизации поставщика, пути URI и имена столбцов"},{"question":"Выберите правильные утверждения о намерении(Intent).","options":["Это структура данных, которая содержит описание операции, которую необходимо выполнить, и обычно используется для запуска действия или услуги.","Используется для отправки сообщений пользователю.","Используется для получения инструкций от пользователя.","Используется для отправки сообщений между основными компонентами приложения.","Разработка метода хранения данных; Создание класса Inheritor из класса ContentProvider; определить путь авторизации поставщика, пути URI и имена столбцов"],"correct":"Это структура данных, которая содержит описание операции, которую необходимо выполнить, и обычно используется для запуска действия или услуги."},{"question":"Расположение элементов мобильного приложения:","options":["Все варианты ответа верны","Влияет на удобство использования","Полезно для создания пространственных отношений.","Соответствие между объектами на экране и объектами реального мира","Полезно для определения иерархии"],"correct":"Все варианты ответа верны"},{"question":"Какие элементы управления используются при установке","options":["Элементы выбора","Элементы командного управления","Элементы ввода","Элементы дисплея","Нет правильного ответа"],"correct":"Элементы выбора"},{"question":"Примерами составных элементов не являются:","options":["Комбинированное поле","Комбинированный список","Все вышеперечисленное","Комбинированная кнопка","Все варианты ответа верны"],"correct":"Комбинированное поле"},{"question":"Дизайн интерфейсов или проектирование для графических дизайнеров:","options":["Все варианты ответа верны","Прозрачность и ясность информации","Тон, стиль, композиция, являющиеся атрибутами бренда.","Предоставление информации о поведении через ожидаемую цель","Цвет"],"correct":"Все варианты ответа верны"},{"question":"Традиционные типографские инструменты не включают в себя следующее:","options":["Цвет","Масштаб","Разрежение","Выравнивание сетки","Все ответы верны"],"correct":"Цвет"},{"question":"Элементы ввода включают в себя следующее","options":["Все варианты ответа верны","Ползунки","Счетчики","Элементы ввода ограничений","Нет правильного ответа"],"correct":"Все варианты ответа верны"},{"question":"Перечислите следующие категории плотности экрана для устройств Android:","options":["LDPI, MDPI, HDPI, XHDPI, XXHDPI иXXXHDPI","HDPI, XHDPI, XXHDPI","XXXHDPI","Нет правильного ответа","LDPI, MDPI, HDPI"],"correct":"LDPI, MDPI, HDPI, XHDPI, XXHDPI иXXXHDPI"},{"question":"Следующие утверждения неверны:","options":["Не используйте предыдущие элементы","Картинки действуют быстрее, чем слова","Должна быть возможность вернуться назад на любом шаге","Если Объекты похожи, они должны выполнять аналогичные действия.","Нет правильного ответа"],"correct":"Не используйте предыдущие элементы"},{"question":"Следующие утверждения верны:","options":["Все варианты ответа верны","Правильного ответа нет","Текстура бесполезна для передачи различий или привлечения внимания.","Трудно воспринимать цель при большом количестве предметов","Люди легко воспринимают контраст"],"correct":"Все варианты ответа верны"},{"question":"Сколько основных вкладок (FixedTabs)удобно показывать.","options":["Три вкладки и меньше","Четыре вкладки","Две вкладки","Три или более вкладок","Нет правильного ответа"],"correct":"Три вкладки и меньше"},{"question":"Когда необходимо использовать уведомления","options":["Сообщение важно, но не требует немедленного прочтения и ответа.","Сообщение важно, его необходимо прочитать и быстро отреагировать.","Сообщение важно, но требует немедленного прочтения, но без ответа.","Сообщение не требует ответа от пользователя, но важно для его продолжения.","Нет правильного ответа"],"correct":"Сообщение важно, но не требует немедленного прочтения и ответа."},{"question":"Какой метод запускает новое действие","options":["startActivity","finishActivity","begin Activity","intent Activity","new Activity"],"correct":"startActivity"},{"question":"ProgressDialog – это:","options":["Диалоговое окно, состоящее из индикатора выполнения действия.","Контейнер для создания пользовательских диалоговых окон.","Диалоговое окно с предопределенным интерфейсом, позволяющее выбрать дату или время.","Диалоговое окно, которое может иметь заголовок, до трех кнопок, список выбранных значений или настраиваемый контент.","Нет правильного ответа"],"correct":"Диалоговое окно, состоящее из индикатора выполнения действия."},{"question":"AlertDialog — это:","options":["Диалоговое окно, которое может иметь заголовок, до трех кнопок, список выбранных значений или настраиваемый контент.","Диалоговое окно с предопределенным интерфейсом, позволяющее выбрать дату или время.","Контейнер для создания пользовательских диалоговых окон.","Диалоговое окно, состоящее из индикатора выполнения для выполнения какого-либо действия.","Нет правильного ответа"],"correct":"Диалоговое окно, которое может иметь заголовок, до трех кнопок, список выбранных значений или настраиваемый контент."},{"question":"Что делать при добавлении в проект новой активности","options":["Запишите информацию о новой активности в манифест","Загрузите и установите специальный пакет SDK для мультиактивности.","Создайте новый проект","Запускаете эмулятор","Нет правильного ответа"],"correct":"Запишите информацию о новой активности в манифест"},{"question":"Какая константа не определена в классе MotionEvent для отображения событий касания","options":["ACTION_CLICK","ACTION_UP","ACTION_DOWN","ACTION_MOVIE","ACTION_START"],"correct":"ACTION_CLICK"},{"question":"КаковацельметодаRelease() вклассахMediaPlayerиMediaRecorder","options":["Завершение жизненного цикла объекта и высвобождение ресурсов","Перемещение объекта в ожидаемое состояние","Обновить объект и начать его работу","Создать объект и начать его работу","Нет правильного ответа"],"correct":"Завершение жизненного цикла объекта и высвобождение ресурсов"},{"question":"Датчики окружающей среды, встроенные в мобильное устройство, включают:","options":["Излучатели света","Датчики вектора вращения","Акселерометры","Гироскопы","Нет правильного ответа"],"correct":"Излучатели света"},{"question":"Что предоставляет библиотека UniversalImageLoader для Android","options":["Загрузка, кэширование и отображение изображений","Парсинг HTML-страниц","Создание графиков и диаграмм.","Используйте только анимацию, доступную в версии 3.","Доступ к любой информации пользователя"],"correct":"Загрузка, кэширование и отображение изображений"},{"question":"​​Facebook SDK для Android — это библиотека, которая позволяет","options":["Писать сообщения на стене, читать и менять статусы, просматривать ленту друзей.","Отправка рекламных сообщений от имени пользователя.","Доступ к любой информации пользователя","Анализ пользовательских страниц","Нет правильного ответа"],"correct":"Писать сообщения на стене, читать и менять статусы, просматривать ленту друзей."},{"question":"Что не входит в правила безопасности при добавлении библиотек","options":["Личное знакомство с разработчиками библиотеки","Изучите форумы и сайты, где обсуждаются библиотеки.","Остерегаться использования библиотек из сомнительных источников","Использование сломанных библиотек","Анализ пользовательских страниц"],"correct":"Личное знакомство с разработчиками библиотеки"},{"question":"Библиотека MapNavigator предназначена для:","options":["Работа с GoogleMaps","Работа с любыми картами","Работа с Яндекс Картами.","Морское судоходство","Все варианты ответа верны"],"correct":"Работа с GoogleMaps"},{"question":"Что не предоставляет библиотека Jsoup","options":["Писать сообщения на стене, читать и менять статусы, просматривать ленту друзей.","Поиск и получение данных с помощью селекторов DOM и CSS","Управление элементами HTML, атрибутами и текстом","Принять URL-адрес, файл или путь в качестве параметра.","Нет правильного ответа"],"correct":"Писать сообщения на стене, читать и менять статусы, просматривать ленту друзей."},{"question":"При настройке обратной совместимости необходимо добавить в файл манифеста следующую информацию:","options":["Минимальная и базовая (целевая) версии Android SDK.","Только минимальная версия Android SDK.","Добавлена ​​информация о библиотеке.","Только базовая (целевая) версия Android SDK.","Нет правильного ответа"],"correct":"Минимальная и базовая (целевая) версии Android SDK."},{"question":"Какая библиотека есть для облегчения загрузки изображений","options":["Universal Image Loader for Android","Yandex.Metrica for Apps","ActionBarSherlock","NineOldAndroids","Все варианты ответа верны"],"correct":"Universal Image Loader for Android"},{"question":"Библиотеки совместимости предназначены для:","options":["Использования возможностей, появившихся в некоторых версиях ОС Android, в предыдущих версиях платформы.","Сбора статистики","Рисовать графики","Добавить нестандартные элементы управления","Нет правильного ответа"],"correct":"Использования возможностей, появившихся в некоторых версиях ОС Android, в предыдущих версиях платформы."},{"question":"Какая библиотека предназначена для использования анимации","options":["NineOldAndroids","Universal Image Loader for Android","Yandex.Metrica for Apps","ActionBarSherlock","Все варианты ответа верны"],"correct":"NineOldAndroids"},{"question":"Для чего нужна папка res/anim/project","options":["Эта папка содержит файлы XML, определяющие последовательность инструкций анимации для преобразования.","В этой папке находятся файлы, содержащие набор изображений для покадровой анимации.","В этой папке находятся файлы с анимационными роликами для воспроизведения в программе.","В этой папке находятся файлы XML, которые определяют, как выполнять анимацию свойств.","Нет правильного ответа"],"correct":"Эта папка содержит файлы XML, определяющие последовательность инструкций анимации для преобразования."},{"question":"Какой метод жизненного цикла вызывает система перед появлением действия на экране","options":["onCreate()","onOpen()","onResume()","invisible()","Все варианты ответа верны"],"correct":"onCreate()"},{"question":"Какова цель метода SurfaceHolder.lockCanvas()","options":["Блокировка Canvasдля восстановления","Игнорировать дальнейшее взаимодействие с Canvas.","Скрыть Canvas","ЗафиксировтьCanvas от складывания.","Нет правильного ответа"],"correct":"Блокировка Canvasдля восстановления"},{"question":"Может ли мобильное приложение получить доступ к базе данных, созданной другим приложением","options":["Да, но только с помощью контент-провайдеров","Ни в коем случае","Права доступа дополнительно раскрываются владельцем базы данных","Может напрямую общаться","Нет правильного ответа"],"correct":"Да, но только с помощью контент-провайдеров"},{"question":"Каким способом можно предотвратить изменение ориентации устройства во время работы приложения","options":["setRequestedOrientation","set Change Orientation","disable Change Orientation","setorientation","нет правильного ответа"],"correct":"setRequestedOrientation"},{"question":"Какой из датчиков не используется для определения положения смартфона в пространстве","options":["GPS","Акселерометр","Гироскоп","Магнитометр","Нет правильного ответа"],"correct":"GPS"},{"question":"Новые возможности HTML5 включают в себя:","options":["Возможность добавления аудио и видео без использования вспомогательных инструментов.","Умение рисовать на холсте","Прямой доступ к оперативной памяти","Форматирование данных в режиме таблицы.","Все варианты ответа верны"],"correct":"Возможность добавления аудио и видео без использования вспомогательных инструментов."},{"question":"На каком языке программирования создаются приложения для ОС Android","options":["Java","Basic","Pascal","PHP","JavaScript"],"correct":"Java"},{"question":"Где хранится скомпилированный код (со всеми файловыми ресурсами и другой необходимой информацией)","options":["AndroidPackage в специальном файловом архиве","В файле","В архиве","В файловом архиве","В специальном файле"],"correct":"AndroidPackage в специальном файловом архиве"},{"question":"В приложениях Android есть четыре типа компонентов. Выберите лишнее:","options":["Деятельность(Activity)","Сервис (Service)","Широковещательный приемник (BroadcastRecevier)","Поставщикконтента(Content Provider)","Скроллер"],"correct":"Деятельность(Activity)"},{"question":"Официальная IDE для создания приложений Android на базе IntelliJIDEA – это...","options":["AndroidStudio","Google","Gradle","Proguard","GoogleCloud"],"correct":"AndroidStudio"},{"question":"Как называется набор средств разработки","options":["SDK","Android","JDK","JRE","Java"],"correct":"SDK"},{"question":"SDK — (в переводе на английский softwaredevelopmentkit) — это — . . .","options":["Инструментарий разработки","Внесение дополнений","Набор инструментов","Инструмент разработки","Набор инструментов для создания"],"correct":"Инструментарий разработки"},{"question":"Менеджер SDK помогает без проблем устанавливать и обновлять SDK. Путьобновления SDK –","options":["Tools - Android - SDK Manager","Tools - SDK Manager -Android","SDK Manager - Android - Tools","Android - SDK Manager - Tools","Android - Tools - SDK Manager"],"correct":"Tools - Android - SDK Manager"},{"question":"Каковы требования к компьютеру с операционной системой, на которой установлена ​​программа AndroidStudio","options":["2 ГБ свободного места на диске, доступно 4 ГБ (500 МБ для IDE + 1,5 ГБ для Android SDK и образа эмулятора)","2 КБ свободного места, доступно 4 ГБ (500 МБ для IDE + 1,5 ГБ для Android SDK и образа эмулятора)","2 МБ свободного места на диске",", доступно 4 ГБ (500 МБ для IDE + 1,5 ГБ для Android SDK и образа эмулятора)","Рекомендуется 1 ГБ."],"correct":"2 ГБ свободного места на диске, доступно 4 ГБ (500 МБ для IDE + 1,5 ГБ для Android SDK и образа эмулятора)"},{"question":"Путь к исполняемым файлам:","options":["PATH, CLASSPATH и дополнительные параметры.","PATH и JAVA","Дополнительные параметры","PATH, CLASSPATH и JAVA_HOME.","CLASSPATH и JAVA"],"correct":"PATH, CLASSPATH и дополнительные параметры."},{"question":"Во время установки AndroidStudio откроется диалоговое окно, состоящее из нескольких шагов. Будет ли изменение произведено в первом открытом окне чата","options":["Это не будет сделано","Проситустановить«Android Virtual Device» (AVD)","Будет сделано","Необходимо указать параметры.","Установщик отображает необходимый объем памяти (2,3 ГБ на диске)."],"correct":"Это не будет сделано"},{"question":"Во время установки AndroidStudio откроется диалоговое окно, состоящее из нескольких шагов. Что мы показываем на втором этапе","options":["Установщик отображает необходимый объем памяти (2,3 ГБ на диске) и спрашивает, следует ли устанавливать «AndroidVirtualDevice» (AVD)","Просит установить виртуальное устройство «AndroidVirtualDevice» (AVD)","не будет сделано","параметры должны быть указаны","Установщик отображает необходимый объем памяти (2,3 МБ на диске)."],"correct":"Установщик отображает необходимый объем памяти (2,3 ГБ на диске) и спрашивает, следует ли устанавливать «AndroidVirtualDevice» (AVD)"},{"question":"Во время установки AndroidStudio откроется диалоговое окно, состоящее из нескольких шагов. Что мы делаем на третьем этапе","options":["Укажите каталог установки","Необходимо указать параметры.","Установщик отображает необходимый объем памяти (2,3 ГБ на диске) и просит установить «AndroidVirtualDevice» (AVD)","Установщик отобразит необходимый объем памяти (2,3 МБ на диске).","Проситустановить Android Virtual Device (AVD)."],"correct":"Укажите каталог установки"},{"question":"Во время установки AndroidStudio откроется диалоговое окно, состоящее из нескольких шагов. Каков четвертый шаг","options":["В стартовом меню среды (shortcutinStartMenu) откроется диалоговое окно о создании кнопки запуска AndroidStudio:","Укажите каталог установки","Установщик отображает необходимый объем памяти (2,3 ГБ на диске) и просит установить «AndroidVirtualDevice» (AVD)","Необходимо указать параметры.","Установщик отображает необходимый объем памяти (2,3 МБ на диске)."],"correct":"В стартовом меню среды (shortcutinStartMenu) откроется диалоговое окно о создании кнопки запуска AndroidStudio:"},{"question":"Что спрашивает AndroidStudio при первом запуске приложения","options":["Следует ли импортировать конфигурацию","Начальное значение","Параметры","Программа запускается без запроса","Переустановите AndroidStudio"],"correct":"Следует ли импортировать конфигурацию"},{"question":"Для изменения кодировки новых проектов и текущих проектов:","options":["Определите значения «Globalencoding» и «ProjectEncoding», выполнив команду File/Settings/Editor/FileEncodings в окне конфигурации.","Не предпринимать никаких действий","Использовать системные настройки по умолчанию","Выпуск уведомлений","Использование определений"],"correct":"Определите значения «Globalencoding» и «ProjectEncoding», выполнив команду File/Settings/Editor/FileEncodings в окне конфигурации."},{"question":"После перехода на подстраницу 'CodeGeneration' в панели «Editor / CodeStyle / Java» в разделе «Naming» в поле «NamePrefix» какой префикс вводится в строке «Field».","options":["«m»","«s»","«n»","«g»","«c»"],"correct":"«m»"},{"question":"После перехода на подстраницу «'CodeGeneration» на панели «Editor / CodeStyle / Java» имеется ли префикс строки «Staticfield», предназначенный для статических полей","options":["'s'","«c»","«m»","«n»","«g»"],"correct":"'s'"},{"question":"Почему мы используем эмулятор","options":["Чтобы протестировать программу","Это операционная система","Чтобы устранить ошибку","Написать программу","Чтобы проверить наличие ошибок"],"correct":"Чтобы протестировать программу"},{"question":"Чтобы создать эмулятор телефона, выберите меню …","options":["Tools | Android | AVD Manager","Tools | AVD Manager","Tools | Android | SDK Manager","View | Android | AVD Manager","Help | Android | AVD Manager"],"correct":"Tools | Android | AVD Manager"},{"question":"Длячегомыиспользуемкнопку «Create a virtual device»","options":["Чтобы создать новый эмулятор","Чтобы дать имя","Чтобы создать новый SDK","Запустить встроенный эмулятор","Нет такой кнопки"],"correct":"Чтобы создать новый эмулятор"},{"question":"Чтобы создать новый модуль, из меню мывыбираем …","options":["File => New => New module","File => New => New Package","File => Edit => Module","File => New => New Project","File => Save => New module"],"correct":"File => New => New module"},{"question":"ЧтотакоеActivity","options":["Окно","Код","Меню","Свойство","Кнопка"],"correct":"Окно"},{"question":"Из чего состоит интерфейс Activity","options":["Из компонентов View","Из Проекта","Из меню","Из качеств","Из кодов"],"correct":"Из компонентов View"},{"question":"Что означает Layout","options":["Контейнер","Окно","Код","Кнопка","Текст"],"correct":"Контейнер"},{"question":"Содержимое модуля (приложения) в структуре проекта включает несколько пакетов, в какой пакет будет помещен написанный туда дополнительный код","options":["Java","Main","Layout","Res","Manifests"],"correct":"Java"},{"question":"Содержание модуля (приложения) в структуре проекта включает несколько пакетов, . . . пакет распространяется на файлы-ресурсы разных типов","options":["Res","main","java","manifests","layout"],"correct":"Res"},{"question":"Содержание модуля (приложения) в структуре проекта включает несколько пакетов, . . . пакет содержит файл конфигурации AndroidManifest. XMLприложения","options":["Manifests","Java","Res","Layout","Main"],"correct":"Manifests"},{"question":"Activity_main. xml — это ...","options":["Макетприложения (шаблон) илиlayout-файл.","Java-код","layout-файл","View компонентов","пакет res"],"correct":"Макетприложения (шаблон) илиlayout-файл."},{"question":"Содержимое Activ_main. xml, отображаемое на экране,обеспечивает расположение ...","options":["View компонентов","Java-кода","layout-файла","Дополнительногомакета","пакета Res"],"correct":"View компонентов"},{"question":"К View компонентам относятся…","options":["Button, Text View, Check Box","Button, Java, Android","Text View, Java","Check Box, Button, Java","Button, Text View, Android"],"correct":"Button, Text View, Check Box"},{"question":"Для добавления в проект нового файла разметки интерфейса:","options":["Щелкните правой кнопкой мыши пакет res/layout и в появившемся меню выберите «New ->Layoutresourcefile».","Щелкните правой кнопкой мыши пакет res/manifests и в появившемся меню выберите «New ->Layoutresourcefile».","Щелкните пакет res/java правой кнопкой мыши и в появившемся меню выберите «New ->Layoutresourcefile».","щелкните правой кнопкой мыши пакет java/layout и в появившемся меню выберите «New ->Layoutresourcefile».","щелкните правой кнопкой мыши manifests /layoutи в появившемся меню выберите «New ->Layoutresourcefile»."],"correct":"Щелкните правой кнопкой мыши пакет res/layout и в появившемся меню выберите «New ->Layoutresourcefile»."},{"question":"Маркировка указывается с помощью признака направления...","options":["android:orientation","android:textSie","android:layout","android:color лллл"],"correct":"android:orientation"},{"question":"Направление маркировки — значение атрибута android:orientation.","options":["“center”","\"horizontal\"","\"vertical\"","“top”","“bottom”"],"correct":"“center”"},{"question":"Позволяет отображать сумму весов всех элементов...","options":["android:weightSum","android:textSie","android:orientation","android:text","android:color"],"correct":"android:weightSum"},{"question":"Когда Android по какой-либо причине завершает или возобновляет операцию (например, запускает новую операцию), какой метод используется для обратного вызова жизненного цикла операции, чтобы уведомить об изменении состояния операции","options":["Callback","onShow","edit","onCall","override"],"correct":"Callback"},{"question":"При первом создании Activity вызывается...","options":["onCreate()","onStart()","onResume()","onPause()","onStop()"],"correct":"onCreate()"},{"question":"Пользователю будет предложено до открытия интерфейсаActivity…","options":["onStart()","onStop()","onResume()","onPause()","onCreate()"],"correct":"onStart()"},{"question":"Вызывается перед открытием другого Activity.","options":["onPause()","onResume()","onStop()","onStart()","onCreate()"],"correct":"onPause()"},{"question":"Вызывается перед разрешением активностипользователю…","options":["onResume()","onPause()","onCreate()","onStart()","onStop()"],"correct":"onResume()"},{"question":"Вызывается после удаления интерфейса Activity с экрана устройства.","options":["onStop()","onStart()","onCreate()","onResume()","onPause()"],"correct":"onStop()"},{"question":"Возвращаетцвет текстаэлементаTextView.","options":["android:textColor:","android:textAllCaps:","android:background:","android:textSize","android:text"],"correct":"android:textColor:"},{"question":"К какой среде относится MIT AppInventor","options":["Облачная среда для визуальной разработки приложений для платформы ОС Android, не требующая знания языков программирования Java и Android SDK.","Режим создания интерфейса приложения(внешний вид)","Среда информационного дизайна","Среда проектирования при создании пользовательского интерфейса.","Среда, где находится список компонентов в проекте"],"correct":"Облачная среда для визуальной разработки приложений для платформы ОС Android, не требующая знания языков программирования Java и Android SDK."},{"question":"Назовите 2 этапа разработки мобильных приложений в MIT AppInventor","options":["Проектирование пользовательского интерфейса и программирование компонентов приложения","Создание и кодирование интерфейса приложения","Создание режима блоков и создание дополнительных компонентов","Проектирование и программирование при создании пользовательского интерфейса.","Режим создания и проектирования блоков"],"correct":"Проектирование пользовательского интерфейса и программирование компонентов приложения"},{"question":"Сколько этапов разработки мобильного приложения в MIT AppInventor","options":["2","4","6","3","5"],"correct":"2"},{"question":"Какие команды выполняются для получения QR-кода приложения","options":["Для этого выполните команду Сборка ⇒ Сгенерировать QR-код для скачивания .apk","Дополнительные настройки (Настройкиприложения) ⇒ Перейдите в меню «Разработка» и выберите «USB» запустите процесс отладки","Подготовьте устройство к использованию USB (включить отладку с помощьюUSB)","На Android 4.0 и новее – Настройки(Настройки) ⇒ Возможности для разработчиковможно добавить(Функции для разработчиков)","Дополнительные настройки на Android-устройстве (Настройки приложение) ⇒ Создайте QR-код, перейдя в меню «Разработка»."],"correct":"Для этого выполните команду Сборка ⇒ Сгенерировать QR-код для скачивания .apk"},{"question":"Назовите способы загрузки приложения на устройство.","options":["В исходном коде (с расширением файла .aia), в виде исполняемого файла (с расширением файла .apk) и в виде QR-кода приложения","Пути мобильных устройств MIT AI2 Companion и ОС Android.","Пути для разработчика (Для разработчиков) и USB Debugging","Настройки и функции для разработчиков","Пути мобильных устройств MIT AI2 Companion"],"correct":"В исходном коде (с расширением файла .aia), в виде исполняемого файла (с расширением файла .apk) и в виде QR-кода приложения"},{"question":"Какие функции часто используются при работе в блочном режиме:","options":["Сброс/разблокировка и отключение/включение блока","Переопределить и создать блок","Удалить и скопировать блок","Блокировка сброса/разблокировки и запуска","Удалить блок"],"correct":"Сброс/разблокировка и отключение/включение блока"},{"question":"Назовите структурные части дизайна интерфейса.","options":["форма, размер, цвет, насыщенность, направление, текстура, расположение","клавиша, мышь, экран, блок, проект","элемент, список, часть, приложение","деталь, элементы, информация, кнопки .","клавиша, мышь"],"correct":"форма, размер, цвет, насыщенность, направление, текстура, расположение"},{"question":"Найдитесреду MIT App Inventor","options":["среда визуального программирования","набор математических блоков","режим, в котором создается интерфейс приложения","список медиафайлов, которые будут использоваться","интерфейс приложения"],"correct":"среда визуального программирования"},{"question":"Каковы части интерфейса языка программирования MIT AppInventor","options":["дизайнер и редактор блоков","встроенные блоки и проекты","Scratch и StarLogo.","переменные и процедуры","Проекты StarLogo"],"correct":"дизайнер и редактор блоков"},{"question":"Одной из популярных в настоящее время сред IDE является","options":["Android Studio","MIT App Inventor","Flash","hotspot","Проекты StarLogo"],"correct":"Android Studio"},{"question":"Генераторы – это…","options":["Это платформы, создающие мобильное приложение на основе существующих веб-страниц. Затем вы указываете URL-адрес своего сайта, и он автоматически создает мобильное приложение с теми же разделами и контентом, что и ваш сайт.","Это платформы, позволяющие собрать приложение из готовых элементов. Его контент создается вашими будущими пользователями. В вашем распоряжении готовые модели и элементы интерфейса, а также части функционала, например, геолокация, отправка сообщений, работа с банковскими картами и т.д. будет.","По сути, это веб-подобные веб-приложения, адаптированные под экран мобильного устройства. Они открываются с помощью браузера на смартфоне.","Это приложения, которые устанавливаются в операционную систему мобильного устройства. Нативные приложения гораздо удобнее и выгоднее для предпринимателей.","Это приложения, которые устанавливаются в операционную систему мобильного устройства."],"correct":"Это платформы, создающие мобильное приложение на основе существующих веб-страниц. Затем вы указываете URL-адрес своего сайта, и он автоматически создает мобильное приложение с теми же разделами и контентом, что и ваш сайт."},{"question":"Официальныйсайт MIT App Inventor","options":["appinventor. mit.edu","www.mail.ru","htts.google","www.canva.com","MITAppInventor"],"correct":"appinventor. mit.edu"},{"question":"Программное обеспечение для мобильного устройства","options":["мобильное","блок управления","дополнительная виртуализация","сферическая панорама","дополнительная виртуализация, блок управления"],"correct":"мобильное"},{"question":"Из скольких блоков состоит мобильное приложение","options":["4","3","6","9","5"],"correct":"4"},{"question":"Что нужно сделать, чтобы подключить Android-устройство к компьютеру с помощью USB-кабеля","options":["Убедитесь, что он добавлен как «память».","Добавить как \"медиа-устройство\".","Разрешить отладку по USB","Проверьте соединение","Дополнительная виртуализация, блок управления"],"correct":"Убедитесь, что он добавлен как «память»."},{"question":"Каковы основные особенности мобильных устройств","options":["Небольшой размер и количество функций","Графическиевозможности","Цвета","Объем кэш-памяти","Размер"],"correct":"Небольшой размер и количество функций"},{"question":"Сколько этапов разработки мобильного приложения в MIT AppInventor","options":["2","4","6","3","5"],"correct":"2"},{"question":"Содержимое модуля (приложения) в структуре проекта включает в себя несколько пакетов, в каком пакете там написан код приложения","options":["Java","Main","Layout","Res","Manifests"],"correct":"Java"},{"question":"Что спрашивает AndroidStudio при первом запуске приложения","options":["Следует ли импортировать конфигурацию","Начальное значение","Параметры","Программа запускается без запроса","Переустановите AndroidStudio"],"correct":"Следует ли импортировать конфигурацию"},{"question":"Набор средств программирования, включающий в себя инструменты, необходимые для создания, компиляции и компиляции мобильного приложения, называется:","options":["Android SDK","JDK","плагин ADT","Android NDK","3D-библиотеки"],"correct":"Android SDK"},{"question":"Как вернуть из метода значение 5","options":["вернуть 5;","продолжить 5;","перерыв 5;","все варианты верны.","Нет"],"correct":"вернуть 5;"},{"question":"Сколько бит занимает в памяти тип short","options":["16","32","8","64","2"],"correct":"16"},{"question":"Каков результат выполнения кода? public class Main { public static void main(String[] args) { int a = 10; int b = 2; егер ((a++ > 0) | (b++ > 0)) { b += 4; } System.out.println(b); } }","options":["7","6","2","1","3"],"correct":"7"},{"question":"Какое значение отображается при выполнении кода? public class Main { public static void main(String[] args) { int a = 10; some(a++); } public static void some(int a) { System.out.println(a); } }","options":["10","11","12","13","14"],"correct":"10"},{"question":"Какое значение отображается при выполнении кода? public class Main { public static void main(String[] args) { byte a = 127; System.out.println(++a); } }","options":["128","128","127","127","126"],"correct":"128"},{"question":"Нам нужен объект, хранящий информацию о пользователе.","options":["Id нового пользователя следует учитывать в порядке добавления.","Имя пользователя.","Его возраст.","Пол (male/female)","Id нового пользователя следует учитывать в порядке убывания."],"correct":"Id нового пользователя следует учитывать в порядке добавления."},{"question":"Одно из ключевых слов языка Java:","options":["default","false","null","true","read"],"correct":"default"},{"question":"Какое значение может иметь переменная логического типа","options":["true","0","1","2","3"],"correct":"true"},{"question":"Какой из следующих классов имеет наибольшее сходство с классом векторов:","options":["ArrayList LinkedList","AbstractCollection","ArrayLinkedList","Abstract","ArrayLinkedList"],"correct":"ArrayList LinkedList"},{"question":"Полноенаименование JDK:","options":["Java Development Kit","Java Developer Kit","Java Developed Key","Java Display Kod","Java Disconnected Key"],"correct":"Java Development Kit"},{"question":"Полноенаименование JDK:","options":["Java Development Kit","Java Developer Kit","Java Developed Key","Java Display Kod","Java Disconnected Key"],"correct":"Java Development Kit"},{"question":"Какой из следующих операторов соответствует целым числам в Java","options":["int","float","return","if","elif"],"correct":"int"},{"question":"Какова функция оператора “return “ в Java","options":["Завершить сервис (метод) и вернуть ответ","Вывести ответ на экран","Вывод математических выражений","Оператор выбора","Начать цикл заново"],"correct":"Завершить сервис (метод) и вернуть ответ"},{"question":"Какова роль массивов в Java","options":["Набор переменных одного типа","Набор переменных разного типа","Набор однотипных операторов","Набор операторов разных типов","Набор однотипных циклов"],"correct":"Набор переменных одного типа"},{"question":"Как в Java обозначаются массивы","options":["[]","()","“”","<>","##"],"correct":"[]"},{"question":"Что означает оператор if в Java","options":["Условие","Ошибка","Массив","Однотипный элемент","Математическое выражение"],"correct":"Условие"},{"question":"Что означают элементы “True, False” в Java","options":["Верно, Неверно","Большой, Маленький","положительное число, отрицательное число","условие выполняется, условие не выполняется","направо, налево"],"correct":"Верно, Неверно"},{"question":"Полное наименование JRE:","options":["Java Runtime Environment","Java Rect Environment","Java Run Extd","Java Remember Ext","Java Rust Empt"],"correct":"Java Runtime Environment"},{"question":"Каковафункция JRE","options":["Чтобы добавить программы Java","Чтобы сохранить Java-программу","Переназначить массивы в Java","Для обновления операторов в Java","Для генерации математических выражений на Java"],"correct":"Чтобы добавить программы Java"},{"question":"Какова функция JDK","options":["Инструмент, необходимый для программы, написанной на Java.","Открытый код, написанный на Java","Отключить программу, написанную на Java","Удаление массивов, написанных на Java","Закройте программу Java."],"correct":"Инструмент, необходимый для программы, написанной на Java."},{"question":"Оператор определения переменной в Java:","options":["var","for","elif","true","none"],"correct":"var"},{"question":"Оператор хранения дробных чисел в Java:","options":["double","int","for","sdk","elif"],"correct":"double"},{"question":"Оператор определения длины массива:","options":["length","return","left","true","none"],"correct":"length"},{"question":"Сколько типов циклов существует в Java","options":["3","4","2","5","7"],"correct":"3"},{"question":"Оператор сравнения двух значений в Java:","options":["==","/=","=!","!=","**"],"correct":"=="},{"question":"Полное наименование JDK:","options":["Java Development Kit","Java Developer Kit","Java Developed Key","Java Display Kod","JavaDisconnectedKey"],"correct":"Java Development Kit"},{"question":"Какой из следующих операторов соответствует целым числам в Java","options":["int","float","return","if","elif"],"correct":"int"},{"question":"Выделите код организации массивов на Java:","options":["Arrays.sort(array);","array.sort();","Collections.sort(array);","array.sort.collections();","Sort.Array();"],"correct":"Arrays.sort(array);"},{"question":"Как определить максимальное значение заданных чисел в Java","options":["int max = array[0]; for (int i = 1; i<array.length; i++) { if (array[i] > max) { max = array[i]; } }","Arrays.max(array);","Collections.max(array);","int.array.max= (array.max);","max.array=int(max, 0);"],"correct":"int max = array[0]; for (int i = 1; i<array.length; i++) { if (array[i] > max) { max = array[i]; } }"},{"question":"Каково значение переменной по умолчанию в Java","options":["0","null","true","false","«»"],"correct":"0"}];
+
+    const quizModules = {
+        pm03: {
+            id: "pm03",
+            title: "Тестирование ПМ 03",
+            subtitle: "Модуль 3.1/3.2: мобильные приложения, Android и интерфейсы.",
+            shortLabel: "3.1/3.2",
+            fullLabel: "3.1/3.2 - ПМ 03",
+            questions: pm03Questions,
+            statsKey: "pm03QuizStats",
+            visitsKey: "pm03QuizVisits",
+            resultsCollection: "pm04Results",
+            visitsCollection: "pm04Visits"
+        },
+        pm04: {
+            id: "pm04",
+            title: "Тестирование ПМ 04",
+            subtitle: "Модуль 4.1: сети, протоколы и безопасность.",
+            shortLabel: "4.1",
+            fullLabel: "4.1 - ПМ 04",
+            questions: pm04Questions,
+            statsKey: "pm04QuizStats",
+            visitsKey: "pm04QuizVisits",
+            resultsCollection: "pm04Results",
+            visitsCollection: "pm04Visits"
+        }
+    };
+
+    let activeModuleId = "pm03";
+    let activeModule = quizModules[activeModuleId];
 
     let currentPool = [];
     let currentQIndex = 0;
@@ -992,9 +1077,9 @@
     let currentCorrectAnswer = "";
     let currentPlayerName = "";
     let currentRangeLabel = "";
-    const statsKey = "pm04QuizStats";
-    const visitsKey = "pm04QuizVisits";
-    const nickKey = "pm04QuizNick";
+    let statsKey = activeModule.statsKey;
+    let visitsKey = activeModule.visitsKey;
+    const nickKey = "quizTrainerNick";
     let cachedStats = [];
     let cachedVisits = 0;
     let onlineDb = null;
@@ -1004,6 +1089,8 @@
     let testStartedAt = 0;
     let elapsedSeconds = 0;
     let timerInterval = null;
+    let unsubscribeResults = null;
+    let unsubscribeVisits = null;
 
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
@@ -1054,8 +1141,10 @@
     async function saveStats(result) {
         if (isOnlineLeaderboard && onlineDb) {
             try {
-                await onlineDb.collection('pm04Results').add({
+                await onlineDb.collection(activeModule.resultsCollection).add({
                     ...result,
+                    moduleId: activeModule.id,
+                    moduleLabel: activeModule.fullLabel,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 return;
@@ -1079,13 +1168,14 @@
 
         if (isOnlineLeaderboard && onlineDb) {
             try {
-                await onlineDb.collection('pm04Visits').add({
+                await onlineDb.collection(activeModule.visitsCollection).add({
                     day: new Date().toISOString().slice(0, 10),
                     visitedAt: new Date().toISOString(),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch {
-                setLeaderboardStatus('error', 'Онлайн-лидерборд работает, но посещение не записалось. Проверьте rules.');
+                // Visits are optional analytics. If Firestore rules block them,
+                // keep the leaderboard status focused on test results.
             }
         }
     }
@@ -1130,42 +1220,7 @@
             isOnlineLeaderboard = true;
             setLeaderboardStatus('online', 'Онлайн-лидерборд включен: результаты общие для всех устройств.');
 
-            onlineDb.collection('pm04Results')
-                .orderBy('createdAt', 'desc')
-                .limit(500)
-                .onSnapshot(snapshot => {
-                    cachedStats = snapshot.docs.map(doc => {
-                        const data = doc.data();
-                        return {
-                            name: data.name || 'Без имени',
-                            score: Number(data.score) || 0,
-                            total: Number(data.total) || 0,
-                            percentage: Number(data.percentage) || 0,
-                            range: data.range || 'Тест',
-                            date: data.date || '',
-                            hintsUsed: Number(data.hintsUsed) || 0,
-                            skipped: Number(data.skipped) || 0,
-                            elapsedSeconds: Number(data.elapsedSeconds) || 0
-                        };
-                    });
-                    renderStats();
-                    renderMyStats();
-                }, () => {
-                    isOnlineLeaderboard = false;
-                    cachedStats = getLocalStats();
-                    setLeaderboardStatus('error', 'Ошибка чтения Firebase. Временно показан локальный лидерборд.');
-                    renderStats();
-                    renderMyStats();
-                });
-
-            onlineDb.collection('pm04Visits')
-                .orderBy('createdAt', 'desc')
-                .onSnapshot(snapshot => {
-                    cachedVisits = snapshot.size;
-                    renderGlobalVisits();
-                });
-
-            recordVisit();
+            subscribeOnlineLeaderboard(true);
         } catch (error) {
             isOnlineLeaderboard = false;
             setLeaderboardStatus('error', 'Firebase настроен неверно. Проверьте config в index.html.');
@@ -1420,10 +1475,110 @@
         syncNickState();
     }
 
+
+    function getRangeOptions(total) {
+        const firstEnd = Math.min(50, total);
+        const options = [{ value: `range:0:${firstEnd}`, label: `Первые ${firstEnd} вопросов (1-${firstEnd})` }];
+
+        if (total > firstEnd) {
+            options.push({ value: `range:${firstEnd}:${total}`, label: `Оставшиеся ${total - firstEnd} (${firstEnd + 1}-${total})` });
+        }
+
+        options.push({ value: 'all', label: `Все ${total} вопросов сразу` });
+        options.push({ value: 'exam', label: `Режим экзамена: 45 случайных вопросов` });
+        return options;
+    }
+
+    function renderRanges() {
+        const container = document.getElementById('range-container');
+        if (!container) return;
+
+        container.innerHTML = getRangeOptions(activeModule.questions.length).map((option, index) => `
+            <label class="range-option">
+                <input type="radio" name="quiz-range" value="${option.value}" ${index === 0 ? 'checked' : ''}>
+                <span class="range-label">${option.label}</span>
+            </label>
+        `).join('');
+    }
+
+    function applyModule(moduleId, shouldRecordVisit = false) {
+        activeModuleId = quizModules[moduleId] ? moduleId : 'pm03';
+        activeModule = quizModules[activeModuleId];
+        statsKey = activeModule.statsKey;
+        visitsKey = activeModule.visitsKey;
+        cachedStats = getLocalStats();
+        cachedVisits = getLocalVisits();
+
+        document.getElementById('intro-title').innerText = activeModule.title;
+        document.getElementById('intro-subtitle').innerText = activeModule.subtitle;
+        document.getElementById('question-total').innerText = String(activeModule.questions.length);
+        document.getElementById('range-total').innerText = String(getRangeOptions(activeModule.questions.length).length);
+        renderRanges();
+        renderStats();
+        renderMyStats();
+        renderGlobalVisits();
+
+        if (onlineDb) subscribeOnlineLeaderboard(shouldRecordVisit);
+    }
+
+    function initModules() {
+        document.querySelectorAll('input[name="quiz-module"]').forEach(input => {
+            input.addEventListener('change', () => applyModule(input.value, true));
+        });
+        applyModule(document.querySelector('input[name="quiz-module"]:checked')?.value || 'pm03');
+    }
+
+    function subscribeOnlineLeaderboard(shouldRecordVisit = false) {
+        if (!onlineDb) return;
+        if (typeof unsubscribeResults === 'function') unsubscribeResults();
+        if (typeof unsubscribeVisits === 'function') unsubscribeVisits();
+
+        isOnlineLeaderboard = true;
+        setLeaderboardStatus('online', `Онлайн-лидерборд включен для ${activeModule.fullLabel}.`);
+
+        unsubscribeResults = onlineDb.collection(activeModule.resultsCollection)
+            .orderBy('createdAt', 'desc')
+            .limit(500)
+            .onSnapshot(snapshot => {
+                cachedStats = snapshot.docs
+                    .map(doc => doc.data())
+                    .filter(data => (data.moduleId || 'pm04') === activeModule.id)
+                    .map(data => ({
+                        name: data.name || 'Без имени',
+                        score: Number(data.score) || 0,
+                        total: Number(data.total) || 0,
+                        percentage: Number(data.percentage) || 0,
+                        range: data.range || 'Тест',
+                        date: data.date || '',
+                        hintsUsed: Number(data.hintsUsed) || 0,
+                        skipped: Number(data.skipped) || 0,
+                        elapsedSeconds: Number(data.elapsedSeconds) || 0
+                    }));
+                renderStats();
+                renderMyStats();
+            }, () => {
+                isOnlineLeaderboard = false;
+                cachedStats = getLocalStats();
+                setLeaderboardStatus('error', 'Ошибка чтения Firebase. Временно показан локальный лидерборд.');
+                renderStats();
+                renderMyStats();
+            });
+
+        unsubscribeVisits = onlineDb.collection(activeModule.visitsCollection)
+            .orderBy('createdAt', 'desc')
+            .onSnapshot(snapshot => {
+                cachedVisits = snapshot.size;
+                renderGlobalVisits();
+            });
+
+        if (shouldRecordVisit) recordVisit();
+    }
+
     function startQuiz() {
         const rangeInput = document.querySelector('input[name="quiz-range"]:checked');
-        const rangeValue = rangeInput.value;
-        currentRangeLabel = rangeInput.closest('.range-option').querySelector('.range-label').innerText;
+        const rangeValue = rangeInput?.value || 'all';
+        const rangeLabel = rangeInput?.closest('.range-option')?.querySelector('.range-label')?.innerText || 'Все вопросы';
+        currentRangeLabel = `${activeModule.shortLabel}: ${rangeLabel}`;
         currentPlayerName = document.getElementById('player-name').value.trim();
 
         if (!currentPlayerName) {
@@ -1433,12 +1588,17 @@
         }
 
         localStorage.setItem(nickKey, currentPlayerName);
-        
-        if (rangeValue === '1-50') currentPool = allQuestions.slice(0, 50);
-        else if (rangeValue === '51-118') currentPool = allQuestions.slice(50, 118);
-        else currentPool = [...allQuestions];
+        const questions = activeModule.questions;
+        if (rangeValue === 'exam') {
+            currentPool = shuffle([...questions]).slice(0, Math.min(45, questions.length));
+        } else if (rangeValue.startsWith('range:')) {
+            const [, from, to] = rangeValue.split(':').map(Number);
+            currentPool = questions.slice(from, to);
+        } else {
+            currentPool = [...questions];
+        }
 
-        shuffle(currentPool);
+        if (rangeValue !== 'exam') shuffle(currentPool);
         
         currentQIndex = 0;
         score = 0;
@@ -1587,6 +1747,7 @@
         renderStats();
     }
 
+    initModules();
     initNick();
     initLeaderboard();
 </script>
