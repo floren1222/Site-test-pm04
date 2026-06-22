@@ -1050,8 +1050,8 @@
             questions: pm03Questions,
             statsKey: "pm03QuizStats",
             visitsKey: "pm03QuizVisits",
-            resultsCollection: "pm04Results",
-            visitsCollection: "pm04Visits"
+            resultsCollection: "pm03Results",
+            visitsCollection: "pm03Visits"
         },
         pm04: {
             id: "pm04",
@@ -1138,8 +1138,19 @@
         return cachedStats;
     }
 
+    function cacheResult(result) {
+        const stats = getLocalStats();
+        stats.push(result);
+        const recentStats = stats.slice(-200);
+        localStorage.setItem(statsKey, JSON.stringify(recentStats));
+        cachedStats = recentStats;
+        renderStats();
+        renderMyStats();
+    }
+
     async function saveStats(result) {
         if (isOnlineLeaderboard && onlineDb) {
+            cacheResult(result);
             try {
                 await onlineDb.collection(activeModule.resultsCollection).add({
                     ...result,
@@ -1151,14 +1162,10 @@
             } catch (error) {
                 setLeaderboardStatus('error', 'Не удалось отправить онлайн-результат. Сохранено локально.');
             }
+            return;
         }
 
-        const stats = getLocalStats();
-        stats.push(result);
-        localStorage.setItem(statsKey, JSON.stringify(stats.slice(-200)));
-        cachedStats = stats.slice(-200);
-        renderStats();
-        renderMyStats();
+        cacheResult(result);
     }
 
     async function recordVisit() {
@@ -1542,7 +1549,7 @@
             .onSnapshot(snapshot => {
                 cachedStats = snapshot.docs
                     .map(doc => doc.data())
-                    .filter(data => (data.moduleId || 'pm04') === activeModule.id)
+                    .filter(data => (data.moduleId || activeModule.id) === activeModule.id)
                     .map(data => ({
                         name: data.name || 'Без имени',
                         score: Number(data.score) || 0,
